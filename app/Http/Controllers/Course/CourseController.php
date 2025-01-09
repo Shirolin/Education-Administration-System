@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Course;
 
 use App\Http\Controllers\ApiController;
 use App\Services\CourseService;
+use Illuminate\Http\Request;
 
 class CourseController extends ApiController
 {
@@ -19,9 +20,9 @@ class CourseController extends ApiController
      * 获取课程列表
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->courseService->index();
+        $data = $this->courseService->index($request->get('per_page', 10));
 
         return $this->success($data);
     }

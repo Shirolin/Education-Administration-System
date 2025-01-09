@@ -2,18 +2,19 @@
 
 namespace App\Services;
 
+use App\Models\Course\Course;
+
 class CourseService extends BaseService
 {
     /**
      * 获取课程列表
      * @return array
      */
-    public function index()
+    public function index($perPage = 10)
     {
-        return [
-            ['id' => 1, 'name' => '课程1'],
-            ['id' => 2, 'name' => '课程2'],
-        ];
+        $data = Course::paginate($perPage);
+
+        return $data;
     }
 
     /**
@@ -35,9 +36,14 @@ class CourseService extends BaseService
      */
     public function show($id)
     {
+        $course = Course::find($id);
+        if (!$course) {
+            return [];
+        }
+
         return [
-            'id' => $id,
-            'name' => '课程' . $id,
+            'course' => $course,
+            'sub_courses' => $course->subCourses,
         ];
     }
 
