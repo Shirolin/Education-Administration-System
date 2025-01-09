@@ -49,6 +49,10 @@ class Course extends Model
      */
     const STATUS_DISABLED = 0;
 
+    protected $attributes = [
+        'status' => self::STATUS_ENABLED,
+    ];
+
     /**
      * 关联子课程
      *
@@ -110,5 +114,19 @@ class Course extends Model
     public function isDisable()
     {
         return $this->status == self::STATUS_DISABLED;
+    }
+
+    /**
+     * 获取子课程数量
+     *
+     * @return int
+     */
+    public function getSubCoursesCountAttribute()
+    {
+        if ($this->relationLoaded('subCourses')) {
+            return $this->subCourses->count();
+        }
+
+        return $this->sub_courses_count;
     }
 }
