@@ -8,14 +8,19 @@ use App\Services\BaseService;
 class CourseService extends BaseService
 {
     /**
-     * 获取课程列表
-     * @return array
+     * 分页获取课程列表
+     * @param int $perPage
+     * @return mixed
      */
-    public function index($perPage = 10)
+    public function getPaginatedCourses($perPage = 10, $filters = [])
     {
-        $data = Course::paginate($perPage);
+        $query = Course::query();
 
-        return $data;
+        if (isset($filters['name'])) {
+            $query->where('name', 'LIKE', "{$filters['name']}%");
+        }
+
+        return $query->paginate($perPage);
     }
 
     /**

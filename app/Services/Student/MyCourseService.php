@@ -8,26 +8,19 @@ use App\Services\BaseService;
 class MyCourseService extends BaseService
 {
     /**
-     * 获取课程列表
-     * @return array
+     * 分页获取课程列表
+     * @param int $perPage
+     * @return mixed
      */
-    public function index($perPage = 10)
+    public function getPaginatedCourses($perPage = 10, $filters = [])
     {
-        $data = Course::paginate($perPage);
+        $query = Course::query();
 
-        return $data;
-    }
+        if (isset($filters['name'])) {
+            $query->where('name', 'LIKE', "{$filters['name']}%");
+        }
 
-    /**
-     * 创建课程
-     * @return array
-     */
-    public function store()
-    {
-        return [
-            'id' => 3,
-            'name' => '课程3',
-        ];
+        return $query->paginate($perPage);
     }
 
     /**
@@ -45,32 +38,6 @@ class MyCourseService extends BaseService
         return [
             'course' => $course,
             'sub_courses' => $course->subCourses,
-        ];
-    }
-
-    /**
-     * 更新课程信息
-     * @param $id
-     * @return array
-     */
-    public function update($id)
-    {
-        return [
-            'id' => $id,
-            'name' => '课程' . $id,
-        ];
-    }
-
-    /**
-     * 删除课程
-     * @param $id
-     * @return array
-     */
-    public function destroy($id)
-    {
-        return [
-            'id' => $id,
-            'name' => '课程' . $id,
         ];
     }
 }

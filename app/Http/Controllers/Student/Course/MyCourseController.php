@@ -22,7 +22,10 @@ class MyCourseController extends ApiController
      */
     public function index(Request $request)
     {
-        $data = $this->courseService->index($request->get('per_page', 10));
+        $perPage = $request->input('per_page', 10);
+        $filters = $request->only(['name']);
+
+        $data = $this->courseService->getPaginatedCourses($perPage, $filters);
 
         return $this->success($data);
     }
