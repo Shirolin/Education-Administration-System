@@ -100,7 +100,7 @@ class CourseService extends BaseService
      *
      * @param int $id 课程ID
      * @param array $courseData 课程数据
-     * @param array $subCoursesData 子课程数据数组
+     * @param array $subCoursesData 子课程数据数组(全量)
      * @return bool
      * @throws Throwable
      */
@@ -108,19 +108,21 @@ class CourseService extends BaseService
     {
         $course = $this->findCourseOrFail($id);
 
+        // 子课程数据处理：
+        // 传入的是全量，需要判断是更新已存在的子课程还是创建新的子课程还是删除已存在的子课程
         try {
             DB::transaction(function () use ($course, $courseData, $subCoursesData) {
                 $course->update($courseData);
-                // 处理子课程更新
+
+                // 更新子课程(新增、更新、删除)
+
+                $subCourseIds = array_column($subCoursesData, 'id');
+                $course->subCourses()->whereNotIn('id', $subCourseIds)->delete();
+
                 foreach ($subCoursesData as $subCourseData) {
                     if (isset($subCourseData['id'])) {
-                        // 更新已存在的子课程
-                        $subCourse = $course->subCourses()->find($subCourseData['id']);
-                        if ($subCourse) {
-                            $subCourse->update($subCourseData);
-                        }
+                        $course->subCourses()->where('id', $subCourseData['id'])->update($subCourseData);
                     } else {
-                        // 创建新的子课程
                         $course->subCourses()->create($subCourseData);
                     }
                 }
