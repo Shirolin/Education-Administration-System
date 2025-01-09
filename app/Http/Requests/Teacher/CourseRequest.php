@@ -47,7 +47,6 @@ class CourseRequest extends FormRequest
             'course.name' => 'required|string|max:255',
             'course.unit_fee' => 'required|numeric|min:0',
             'sub_courses' => 'required|array',
-            'sub_courses.*.course_id' => 'required|integer',
             'sub_courses.*.year' => 'required|integer',
             'sub_courses.*.month' => [
                 'required',
@@ -58,7 +57,6 @@ class CourseRequest extends FormRequest
                     foreach ($subCourses as $index => $subCourse) {
                         if (
                             $index != explode('.', $attribute)[1] &&
-                            $subCourse['course_id'] == $currentSubCourse['course_id'] &&
                             $subCourse['year'] == $currentSubCourse['year'] &&
                             $subCourse['month'] == $currentSubCourse['month']
                         ) {
@@ -80,7 +78,6 @@ class CourseRequest extends FormRequest
             'course.name.required' => '课程名称不能为空',
             'course.unit_fee.required' => '单元费用不能为空',
             'sub_courses.required' => '子课程不能为空',
-            'sub_courses.*.course_id.required' => '子课程的课程ID不能为空',
             'sub_courses.*.year.required' => '子课程年份不能为空',
             'sub_courses.*.month.required' => '子课程月份不能为空',
             'sub_courses.*.month.unique' => '子课程的年月必须唯一',

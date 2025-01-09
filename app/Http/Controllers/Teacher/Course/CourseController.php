@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Teacher\Course;
 
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\Teacher\CourseRequest;
 use App\Services\Teacher\CourseService;
 use Illuminate\Http\Request;
 
@@ -47,12 +48,12 @@ class CourseController extends ApiController
      * 创建课程
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store()
+    public function store(CourseRequest $request)
     {
-        $courses = [];
-        $subCourses = [];
+        $course = $request->input('course');
+        $subCourses = $request->input('sub_courses');
 
-        $data = $this->courseService->createCourse($courses, $subCourses);
+        $data = $this->courseService->createCourse($course, $subCourses);
         if (!$data) {
             return $this->error('创建失败', $data);
         }
