@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Teacher\Course;
 
 use App\Http\Controllers\ApiController;
-use App\Services\CourseService;
+use App\Services\Teacher\CourseService;
 use Illuminate\Http\Request;
 
 class CourseController extends ApiController

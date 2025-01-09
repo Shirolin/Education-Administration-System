@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Teacher;
+
+use App\Services\BaseService;
 
 class InvoiceService extends BaseService
 {

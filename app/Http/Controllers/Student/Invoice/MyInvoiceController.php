@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Student\Invoice;
 
 use App\Http\Controllers\ApiController;
-use App\Services\InvoiceService;
+use App\Services\Student\MyInvoiceService;
 
 class MyInvoiceController extends ApiController
 {
     protected $InvoiceService;
 
-    public function __construct(InvoiceService $InvoiceService)
+    public function __construct(MyInvoiceService $InvoiceService)
     {
         $this->InvoiceService = $InvoiceService;
         // $this->middleware('auth:api');

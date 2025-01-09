@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Teacher\Invoice;
 
 use App\Http\Controllers\ApiController;
-use App\Services\InvoiceService;
+use App\Services\Teacher\InvoiceService;
 
 class InvoiceController extends ApiController
 {

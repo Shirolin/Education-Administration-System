@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Student\Course;
 
 use App\Http\Controllers\ApiController;
-use App\Services\CourseService;
+use App\Services\Student\MyCourseService;
 use Illuminate\Http\Request;
 
 class MyCourseController extends ApiController
 {
     protected $courseService;
 
-    public function __construct(CourseService $courseService)
+    public function __construct(MyCourseService $courseService)
     {
         $this->courseService = $courseService;
         // $this->middleware('auth:api');

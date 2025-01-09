@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Student;
 
 use App\Models\Course\Course;
+use App\Services\BaseService;
 
-class CourseService extends BaseService
+class MyCourseService extends BaseService
 {
     /**
      * 获取课程列表
