@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $teacher_nickname
  * @property string $name
  * @property string $unit_fee
- * @property int $sub_courses_count
  * @property int $status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -29,13 +28,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Course whereSubCoursesCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereTeacherId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereTeacherNickname($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereUnitFee($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereUpdatedAt($value)
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Course\SubCourse> $subCourses
  * @property-read Teacher|null $teacher
+ * @property-read int|null $students_count
+ * @property-read int|null $sub_courses_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Student> $students
  * @mixin \Eloquent
  */
 class Course extends Model
@@ -55,6 +56,14 @@ class Course extends Model
 
     protected $attributes = [
         'status' => self::STATUS_ENABLED,
+    ];
+
+    protected $fillable = [
+        'teacher_id',
+        'teacher_nickname',
+        'name',
+        'unit_fee',
+        'status',
     ];
 
     /**
@@ -135,7 +144,7 @@ class Course extends Model
             return $this->subCourses->count();
         }
 
-        return $this->sub_courses_count;
+        return $this->subCourses()->count();
     }
 
     /**
