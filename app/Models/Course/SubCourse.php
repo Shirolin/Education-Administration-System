@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ * 子课程(课程的具体年月份)
  *
  * @property int $id
  * @property int $course_id
@@ -32,4 +32,14 @@ class SubCourse extends Model
     use HasFactory;
 
     protected $table = 'sub_courses';
+
+    /**
+     * 关联课程
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'course_id', 'id');
+    }
 }
