@@ -6,6 +6,7 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
+use Laravel\Passport\Exceptions\OAuthServerException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -52,7 +53,7 @@ class Handler extends ExceptionHandler
             if ($exception instanceof MethodNotAllowedHttpException) {
                 return $this->error('请求方法不允许！', null, 405);
             }
-            if ($exception instanceof AuthenticationException) {
+            if ($exception instanceof AuthenticationException || $exception instanceof OAuthServerException) {
                 return $this->error('未登录，请先登录！', null, 401);
             }
 
