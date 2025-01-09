@@ -6,6 +6,7 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Passport\Exceptions\OAuthServerException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -47,7 +48,7 @@ class Handler extends ExceptionHandler
             if ($exception instanceof ValidationException) {
                 return $this->error($exception->validator->errors(), null, 422);
             }
-            if ($exception instanceof NotFoundHttpException) {
+            if ($exception instanceof NotFoundHttpException || $exception instanceof ModelNotFoundException) {
                 return $this->error('资源未找到！', null, 404);
             }
             if ($exception instanceof MethodNotAllowedHttpException) {
