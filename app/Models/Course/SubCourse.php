@@ -35,6 +35,13 @@ class SubCourse extends Model
 
     protected $table = 'sub_courses';
 
+    protected $fillable = [
+        'course_id',
+        'year',
+        'month',
+        'fee',
+    ];
+
     /**
      * 关联课程
      */
