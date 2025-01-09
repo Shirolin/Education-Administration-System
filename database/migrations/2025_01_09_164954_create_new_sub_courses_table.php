@@ -12,14 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sub_courses', function (Blueprint $table) {
-            $table->id();
-            $table->integer('course_id');
-            $table->integer('year');
-            $table->integer('month');
+            $table->id(); // 自增 BIGINT 主键
+            $table->unsignedInteger('course_id'); // 无符号 int4
+            $table->unsignedInteger('year'); // 无符号 int4
+            $table->unsignedInteger('month'); // 无符号 int4
             $table->decimal('fee', 10, 2);
             $table->timestamps();
 
-            $table->foreign('course_id')->references('id')->on('courses');
+            $table->unique(['course_id', 'year', 'month'], 'sub_courses_course_id_year_month_unique'); // 唯一索引
+            $table->foreign('course_id')
+                ->references('id')
+                ->on('courses')
+                ->onDelete('cascade'); // 外键约束，级联删除
         });
     }
 
