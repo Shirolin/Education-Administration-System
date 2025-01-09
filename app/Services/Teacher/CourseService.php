@@ -24,7 +24,7 @@ class CourseService extends BaseService
             $query->where('name', 'LIKE', "{$filters['name']}%");
         }
 
-        return $query->withCount('subCourses')->paginate($perPage);
+        return $query->withCount(['subCourses', 'students'])->paginate($perPage);
     }
 
     /**
@@ -147,6 +147,6 @@ class CourseService extends BaseService
      */
     public function findCourseOrFail(int $id): Course
     {
-        return Course::withCount('subCourses')->findOrFail($id);
+        return Course::withCount(['subCourses', 'students'])->findOrFail($id);
     }
 }
