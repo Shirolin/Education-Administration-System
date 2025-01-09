@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,7 +38,7 @@ Route::group(['prefix' => 'auth'], function () {
 // `GET /api/invoices/{id}`：获取单个账单信息
 // `POST /api/invoices/{id}/send`：发送账单 (通知学生)
 Route::group([
-    'middleware' => 'auth:api',
+    // 'middleware' => 'auth:api',
 ], function () {
     // 课程
     Route::get('/courses', [CourseController::class, 'index']);
