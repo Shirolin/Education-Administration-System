@@ -18,12 +18,13 @@ class CourseService extends BaseService
     public function getPaginatedCourses($perPage = self::DEFAULT_PER_PAGE, $filters = [])
     {
         $query = Course::query();
+        $query->with('subCourses');
 
         if (isset($filters['name'])) {
             $query->where('name', 'LIKE', "{$filters['name']}%");
         }
 
-        return $query->paginate($perPage);
+        return $query->withCount('subCourses')->paginate($perPage);
     }
 
     /**
@@ -146,6 +147,6 @@ class CourseService extends BaseService
      */
     public function findCourseOrFail(int $id): Course
     {
-        return Course::findOrFail($id);
+        return Course::withCount('subCourses')->findOrFail($id);
     }
 }
