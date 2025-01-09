@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Teacher\Course;
 
 use App\Http\Controllers\ApiController;
-use App\Http\Requests\Teacher\CourseRequest;
+use App\Http\Requests\Teacher\Course\CreateCourseRequest;
+use App\Http\Requests\Teacher\Course\UpdateCourseRequest;
 use App\Services\Teacher\CourseService;
 use Illuminate\Http\Request;
 
@@ -46,9 +47,10 @@ class CourseController extends ApiController
 
     /**
      * 创建课程
+     * @param CreateCourseRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(CourseRequest $request)
+    public function store(CreateCourseRequest $request)
     {
         $course = $request->input('course');
         $subCourses = $request->input('sub_courses');
@@ -63,15 +65,16 @@ class CourseController extends ApiController
 
     /**
      * 更新课程信息
+     * @param UpdateCourseRequest $request
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update($id)
+    public function update(UpdateCourseRequest $request, $id)
     {
-        $courses = [];
-        $subCourses = [];
+        $course = $request->input('course');
+        $subCourses = $request->input('sub_courses');
 
-        $data = $this->courseService->updateCourse($id, $courses, $subCourses);
+        $data = $this->courseService->updateCourse($id, $course, $subCourses);
         if (!$data) {
             return $this->error('更新失败', $data);
         }

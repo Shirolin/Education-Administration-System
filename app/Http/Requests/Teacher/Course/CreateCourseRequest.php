@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Teacher;
+namespace App\Http\Requests\Teacher\Course;
 
 use App\Models\Course\Course;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Teacher;
 
-class CourseRequest extends FormRequest
+class CreateCourseRequest extends FormRequest
 {
     public function authorize(): bool
     {
