@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Invoice;
+namespace App\Http\Controllers\Teacher\Invoice;
 
 use App\Http\Controllers\ApiController;
 use App\Services\InvoiceService;

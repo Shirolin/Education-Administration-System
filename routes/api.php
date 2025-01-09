@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Course\CourseController;
-use App\Http\Controllers\Invoice\InvoiceController;
+use App\Http\Controllers\Student\Course\MyCourseController;
+use App\Http\Controllers\Student\Invoice\MyInvoiceController;
+use App\Http\Controllers\Teacher\Course\CourseController;
+use App\Http\Controllers\Teacher\Invoice\InvoiceController;
 use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +31,7 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 });
 
+// 教师端接口
 // `GET /api/courses`：获取课程列表
 // `POST /api/courses`：创建课程
 // `GET /api/courses/{id}`：获取单个课程信息
@@ -37,6 +40,8 @@ Route::group(['prefix' => 'auth'], function () {
 // `GET /api/invoices`：获取账单列表
 // `POST /api/invoices`：创建账单
 // `GET /api/invoices/{id}`：获取单个账单信息
+// `PUT /api/invoices/{id}`：更新账单信息
+// `DELETE /api/invoices/{id}`：删除账单
 // `POST /api/invoices/{id}/send`：发送账单 (通知学生)
 Route::group([
     // 'middleware' => 'auth:api',
@@ -56,4 +61,22 @@ Route::group([
     Route::delete('/invoices/{id}', [InvoiceController::class, 'destroy']);
     Route::post('/invoices/{id}/send', [InvoiceController::class, 'send']);
 
+});
+
+// 学生端接口
+// `GET /api/courses`：获取课程列表
+// `GET /api/courses/{id}`：获取单个课程信息
+// `GET /api/invoices`：获取账单列表
+// `GET /api/invoices/{id}`：获取单个账单信息
+Route::group([
+    // 'middleware' => 'auth:api',
+    'prefix' => 'my',
+], function () {
+    // 课程
+    Route::get('/courses', [MyCourseController::class, 'index']);
+    Route::get('/courses/{id}', [MyCourseController::class, 'show']);
+
+    // 账单
+    Route::get('/invoices', [MyInvoiceController::class, 'index']);
+    Route::get('/invoices/{id}', [MyInvoiceController::class, 'show']);
 });
