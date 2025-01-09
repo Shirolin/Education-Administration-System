@@ -18,14 +18,27 @@ class CourseController extends ApiController
 
     /**
      * 获取课程列表
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page', 10);
+        $perPage = $request->input('per_page');
         $filters = $request->only(['name']);
 
         $data = $this->courseService->getPaginatedCourses($perPage, $filters);
+
+        return $this->success($data);
+    }
+
+    /**
+     * 获取单个课程信息
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id)
+    {
+        $data = $this->courseService->show($id);
 
         return $this->success($data);
     }
@@ -38,24 +51,12 @@ class CourseController extends ApiController
     {
         $data = $this->courseService->store();
 
-        return $this->success($data, '创建成功', 201);
-    }
-
-    /**
-     * 获取单个课程信息
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show($id)
-    {
-        $data = $this->courseService->show($id);
-
-        return $this->success($data);
+        return $this->success($data, '创建成功');
     }
 
     /**
      * 更新课程信息
-     * @param $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function update($id)
@@ -67,7 +68,7 @@ class CourseController extends ApiController
 
     /**
      * 删除课程
-     * @param $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)

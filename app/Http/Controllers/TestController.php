@@ -2,14 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\ApiResponseTrait;
+use App\Models\User;
 
 class TestController extends ApiController
 {
-    use ApiResponseTrait;
+
+    public function __construct()
+    {
+        // $this->middleware('auth:api');
+    }
 
     public function test()
     {
-        return $this->success('Hello World!');
+        $user = User::whereRole(1)->first();
+
+        // if (!$user) {
+        //     return $this->error('用户不存在');
+        // }
+
+        return $this->success($user);
     }
 }

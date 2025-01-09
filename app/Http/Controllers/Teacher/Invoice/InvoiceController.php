@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Teacher\Invoice;
 
 use App\Http\Controllers\ApiController;
 use App\Services\Teacher\InvoiceService;
+use Illuminate\Http\Request;
 
 class InvoiceController extends ApiController
 {
@@ -17,11 +18,30 @@ class InvoiceController extends ApiController
 
     /**
      * 获取账单列表
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->InvoiceService->index();
+        $perPage = $request->input('per_page');
+        $filters = $request->only(['invoice_no', 'status']);
+
+        $data = $this->InvoiceService->getPaginatedInvoices($perPage, $filters);
+
+        return $this->success($data);
+    }
+
+    /**
+     * 获取单个账单信息
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id)
+    {
+        $data = $this->InvoiceService->show($id);
+        if (!$data) {
+            return $this->error('账单不存在', $data);
+        }
 
         return $this->success($data);
     }
@@ -34,24 +54,12 @@ class InvoiceController extends ApiController
     {
         $data = $this->InvoiceService->store();
 
-        return $this->success($data, '创建成功', 201);
-    }
-
-    /**
-     * 获取单个账单信息
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show($id)
-    {
-        $data = $this->InvoiceService->show($id);
-
-        return $this->success($data);
+        return $this->success($data, '创建成功');
     }
 
     /**
      * 更新账单信息
-     * @param $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function update($id)
@@ -63,7 +71,7 @@ class InvoiceController extends ApiController
 
     /**
      * 删除账单
-     * @param $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
@@ -75,7 +83,7 @@ class InvoiceController extends ApiController
 
     /**
      * 发送账单
-     * @param $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function send($id)

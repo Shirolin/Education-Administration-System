@@ -18,11 +18,12 @@ class MyCourseController extends ApiController
 
     /**
      * 获取课程列表
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page', 10);
+        $perPage = $request->input('per_page');
         $filters = $request->only(['name']);
 
         $data = $this->courseService->getPaginatedCourses($perPage, $filters);
@@ -32,12 +33,15 @@ class MyCourseController extends ApiController
 
     /**
      * 获取单个课程信息
-     * @param $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
         $data = $this->courseService->show($id);
+        if (!$data) {
+            return $this->error('课程不存在', $data);
+        }
 
         return $this->success($data);
     }

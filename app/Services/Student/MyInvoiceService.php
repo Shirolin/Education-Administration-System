@@ -2,83 +2,47 @@
 
 namespace App\Services\Student;
 
+use App\Models\Invoice\Invoice;
 use App\Services\BaseService;
 
 class MyInvoiceService extends BaseService
 {
     /**
-     * 获取账单列表
-     * @return array
+     * 分页获取账单列表
+     * @param int $perPage
+     * @param array $filters
+     * @return mixed
      */
-    public function index()
+    public function getPaginatedInvoices($perPage = self::DEFAULT_PER_PAGE, $filters = [])
     {
-        return [
-            ['id' => 1, 'name' => '账单1'],
-            ['id' => 2, 'name' => '账单2'],
-        ];
-    }
+        $query = Invoice::query();
 
-    /**
-     * 创建账单
-     * @return array
-     */
-    public function store()
-    {
-        return [
-            'id' => 3,
-            'name' => '账单3',
-        ];
+        if (isset($filters['invoice_no'])) {
+            $query->where('invoice_no', 'LIKE', "{$filters['invoice_no']}%");
+        }
+
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        return $query->paginate($perPage);
     }
 
     /**
      * 获取单个账单信息
-     * @param $id
-     * @return array
+     * @param int $id
+     * @return array|false
      */
     public function show($id)
     {
-        return [
-            'id' => $id,
-            'name' => '账单' . $id,
-        ];
-    }
+        $invoice = Invoice::find($id);
+        if (!$invoice) {
+            return false;
+        }
 
-    /**
-     * 更新账单信息
-     * @param $id
-     * @return array
-     */
-    public function update($id)
-    {
         return [
-            'id' => $id,
-            'name' => '账单' . $id,
-        ];
-    }
-
-    /**
-     * 删除账单
-     * @param $id
-     * @return array
-     */
-    public function destroy($id)
-    {
-        return [
-            'id' => $id,
-            'name' => '账单' . $id,
-        ];
-    }
-
-    /**
-     * 发送账单
-     * @param $id
-     * @return array
-     */
-    public function send($id)
-    {
-        return [
-            'id' => $id,
-            'name' => '账单' . $id,
+            'invoice' => $invoice,
+            'items' => $invoice->items,
         ];
     }
 }

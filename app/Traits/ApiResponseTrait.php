@@ -9,11 +9,23 @@ trait ApiResponseTrait
     /**
      * @var int 成功状态码
      */
-    const SUCCESS = 200;
+    const HTTP_CODE_SUCCESS = 200;
     /**
      * @var int 失败状态码
      */
-    const ERROR = 400;
+    const HTTP_CODE_ERROR = 400;
+    /**
+     * @var int 未授权状态码
+     */
+    const HTTP_CODE_UNAUTHORIZED = 401;
+    /**
+     * @var int 无权限状态码
+     */
+    const HTTP_CODE_FORBIDDEN = 403;
+    /**
+     * @var int 未找到状态码
+     */
+    const HTTP_CODE_NOT_FOUND = 404;
 
     /**
      * 返回成功的响应
@@ -23,7 +35,7 @@ trait ApiResponseTrait
      * @param int $code 返回的状态码
      * @return \Illuminate\Http\JsonResponse
      */
-    public function success($data = null, $message = '操作成功', $code = self::SUCCESS): JsonResponse
+    public function success($data = null, $message = '操作成功', $code = self::HTTP_CODE_SUCCESS): JsonResponse
     {
         return response()->json([
             'code' => $code,
@@ -40,7 +52,7 @@ trait ApiResponseTrait
      * @param int $code 返回的状态码
      * @return \Illuminate\Http\JsonResponse
      */
-    public function error($message = '操作失败', $data = null, $code = self::ERROR): JsonResponse
+    public function error($message = '操作失败', $data = null, $code = self::HTTP_CODE_ERROR): JsonResponse
     {
         return response()->json([
             'code' => $code,
@@ -59,7 +71,7 @@ trait ApiResponseTrait
      * @param int $code
      * @return \Illuminate\Http\JsonResponse
      */
-    public function withMeta($data = null, $meta = [], $message = '操作成功', $code = self::SUCCESS): JsonResponse
+    public function withMeta($data = null, $meta = [], $message = '操作成功', $code = self::HTTP_CODE_SUCCESS): JsonResponse
     {
         return response()->json([
             'code' => $code,

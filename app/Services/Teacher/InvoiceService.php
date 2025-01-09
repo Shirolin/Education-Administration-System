@@ -10,17 +10,40 @@ class InvoiceService extends BaseService
     /**
      * 分页获取账单列表
      * @param int $perPage
+     * @param array $filters
      * @return mixed
      */
-    public function getPaginatedCourses($perPage = 10, $filters = [])
+    public function getPaginatedInvoices($perPage = self::DEFAULT_PER_PAGE, $filters = [])
     {
         $query = Invoice::query();
 
-        if (isset($filters['name'])) {
-            $query->where('name', 'LIKE', "{$filters['name']}%");
+        if (isset($filters['invoice_no'])) {
+            $query->where('invoice_no', 'LIKE', "{$filters['invoice_no']}%");
+        }
+
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
         }
 
         return $query->paginate($perPage);
+    }
+
+    /**
+     * 获取单个账单信息
+     * @param int $id
+     * @return array
+     */
+    public function show($id)
+    {
+        $invoice = Invoice::find($id);
+        if (!$invoice) {
+            return false;
+        }
+
+        return [
+            'invoice' => $invoice,
+            'items' => $invoice->items,
+        ];
     }
 
     /**
@@ -32,19 +55,6 @@ class InvoiceService extends BaseService
         return [
             'id' => 3,
             'name' => '账单3',
-        ];
-    }
-
-    /**
-     * 获取单个账单信息
-     * @param $id
-     * @return array
-     */
-    public function show($id)
-    {
-        return [
-            'id' => $id,
-            'name' => '账单' . $id,
         ];
     }
 

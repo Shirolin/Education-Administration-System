@@ -10,9 +10,10 @@ class MyCourseService extends BaseService
     /**
      * 分页获取课程列表
      * @param int $perPage
+     * @param array $filters
      * @return mixed
      */
-    public function getPaginatedCourses($perPage = 10, $filters = [])
+    public function getPaginatedCourses($perPage = self::DEFAULT_PER_PAGE, $filters = [])
     {
         $query = Course::query();
 
@@ -25,14 +26,14 @@ class MyCourseService extends BaseService
 
     /**
      * 获取单个课程信息
-     * @param $id
-     * @return array
+     * @param int $id
+     * @return array|false
      */
     public function show($id)
     {
         $course = Course::find($id);
         if (!$course) {
-            return [];
+            return false;
         }
 
         return [
