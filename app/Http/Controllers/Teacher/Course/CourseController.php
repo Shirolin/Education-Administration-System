@@ -49,7 +49,13 @@ class CourseController extends ApiController
      */
     public function store()
     {
-        $data = $this->courseService->store();
+        $courses = [];
+        $subCourses = [];
+
+        $data = $this->courseService->createCourse($courses, $subCourses);
+        if (!$data) {
+            return $this->error('创建失败', $data);
+        }
 
         return $this->success($data, '创建成功');
     }
@@ -61,7 +67,13 @@ class CourseController extends ApiController
      */
     public function update($id)
     {
-        $data = $this->courseService->update($id);
+        $courses = [];
+        $subCourses = [];
+
+        $data = $this->courseService->updateCourse($id, $courses, $subCourses);
+        if (!$data) {
+            return $this->error('更新失败', $data);
+        }
 
         return $this->success($data, '更新成功');
     }
@@ -73,7 +85,10 @@ class CourseController extends ApiController
      */
     public function destroy($id)
     {
-        $data = $this->courseService->destroy($id);
+        $data = $this->courseService->deleteCourse($id);
+        if (!$data) {
+            return $this->error('删除失败', $data);
+        }
 
         return $this->success($data, '删除成功');
     }
