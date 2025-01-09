@@ -42,11 +42,23 @@ class SubCourse extends Model
         'fee',
     ];
 
+    protected $appends = [
+        'year_month',
+    ];
+
     /**
      * 关联课程
      */
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class, 'course_id', 'id');
+    }
+
+    /**
+     * 获取子课程的年月份
+     */
+    public function getYearMonthAttribute(): string
+    {
+        return $this->year . '-' . str_pad($this->month, 2, '0', STR_PAD_LEFT);
     }
 }

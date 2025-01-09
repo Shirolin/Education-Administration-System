@@ -66,6 +66,8 @@ class Course extends Model
         'status',
     ];
 
+    protected $appends = ['status_name'];
+
     /**
      * 关联子课程
      */
@@ -108,7 +110,7 @@ class Course extends Model
      *
      * @return string
      */
-    public function getStatusName()
+    public function getStatusNameAttribute()
     {
         return self::getStatusMap()[$this->status] ?? '未知';
     }
