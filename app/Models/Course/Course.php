@@ -2,9 +2,13 @@
 
 namespace App\Models\Course;
 
+use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * 课程
@@ -55,22 +59,26 @@ class Course extends Model
 
     /**
      * 关联子课程
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function subCourses()
+    public function subCourses(): HasMany
     {
         return $this->hasMany(SubCourse::class, 'course_id', 'id');
     }
 
     /**
      * 关联老师
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function teacher()
+    public function teacher(): BelongsTo
     {
         return $this->belongsTo(Teacher::class, 'teacher_id', 'id');
+    }
+
+    /**
+     * 关联学生
+     */
+    public function students(): BelongsToMany
+    {
+        return $this->belongsToMany(Student::class, 'course_student', 'course_id', 'student_id');
     }
 
     /**
@@ -128,5 +136,19 @@ class Course extends Model
         }
 
         return $this->sub_courses_count;
+    }
+
+    /**
+     * 获取关联学生数量
+     *
+     * @return int
+     */
+    public function getStudentsCountAttribute()
+    {
+        if ($this->relationLoaded('students')) {
+            return $this->students->count();
+        }
+
+        return $this->students()->count();
     }
 }
