@@ -2,20 +2,25 @@
 
 namespace App\Services\Teacher;
 
+use App\Models\Invoice\Invoice;
 use App\Services\BaseService;
 
 class InvoiceService extends BaseService
 {
     /**
-     * 获取账单列表
-     * @return array
+     * 分页获取账单列表
+     * @param int $perPage
+     * @return mixed
      */
-    public function index()
+    public function getPaginatedCourses($perPage = 10, $filters = [])
     {
-        return [
-            ['id' => 1, 'name' => '账单1'],
-            ['id' => 2, 'name' => '账单2'],
-        ];
+        $query = Invoice::query();
+
+        if (isset($filters['name'])) {
+            $query->where('name', 'LIKE', "{$filters['name']}%");
+        }
+
+        return $query->paginate($perPage);
     }
 
     /**

@@ -31,17 +31,6 @@ class MyCourseController extends ApiController
     }
 
     /**
-     * 创建课程
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store()
-    {
-        $data = $this->courseService->store();
-
-        return $this->success($data, '创建成功', 201);
-    }
-
-    /**
      * 获取单个课程信息
      * @param $id
      * @return \Illuminate\Http\JsonResponse
@@ -51,29 +40,5 @@ class MyCourseController extends ApiController
         $data = $this->courseService->show($id);
 
         return $this->success($data);
-    }
-
-    /**
-     * 更新课程信息
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update($id)
-    {
-        $data = $this->courseService->update($id);
-
-        return $this->success($data, '更新成功');
-    }
-
-    /**
-     * 删除课程
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy($id)
-    {
-        $data = $this->courseService->destroy($id);
-
-        return $this->success($data, '删除成功');
     }
 }
