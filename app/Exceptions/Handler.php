@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
                 return $this->error('请求方法不允许！', null, 405);
             }
             if ($exception instanceof AuthenticationException || $exception instanceof OAuthServerException) {
-                return $this->error('未登录，请先登录！', null, 401);
+                return $this->error('认证失败！', null, 401);
             }
 
             return $this->error('服务器错误', null, 500);
