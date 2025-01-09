@@ -47,19 +47,19 @@ Route::group([
     // 'middleware' => 'auth:api',
 ], function () {
     // 课程
-    Route::get('/courses', [CourseController::class, 'index']);
-    Route::post('/courses', [CourseController::class, 'store']);
-    Route::get('/courses/{id}', [CourseController::class, 'show']);
-    Route::put('/courses/{id}', [CourseController::class, 'update']);
-    Route::delete('/courses/{id}', [CourseController::class, 'destroy']);
+    Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+    Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
+    Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show');
+    Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update');
+    Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy');
 
     // 账单
-    Route::get('/invoices', [InvoiceController::class, 'index']);
-    Route::post('/invoices', [InvoiceController::class, 'store']);
-    Route::get('/invoices/{id}', [InvoiceController::class, 'show']);
-    Route::put('/invoices/{id}', [InvoiceController::class, 'update']);
-    Route::delete('/invoices/{id}', [InvoiceController::class, 'destroy']);
-    Route::post('/invoices/{id}/send', [InvoiceController::class, 'send']);
+    Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
+    Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoices.store');
+    Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+    Route::put('/invoices/{id}', [InvoiceController::class, 'update'])->name('invoices.update');
+    Route::delete('/invoices/{id}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
+    Route::post('/invoices/{id}/send', [InvoiceController::class, 'send'])->name('invoices.send');
 
 });
 
@@ -73,10 +73,10 @@ Route::group([
     'prefix' => 'my',
 ], function () {
     // 课程
-    Route::get('/courses', [MyCourseController::class, 'index']);
-    Route::get('/courses/{id}', [MyCourseController::class, 'show']);
+    Route::get('/courses', [MyCourseController::class, 'index'])->name('my.courses.index');
+    Route::get('/courses/{id}', [MyCourseController::class, 'show'])->name('my.courses.show');
 
     // 账单
-    Route::get('/invoices', [MyInvoiceController::class, 'index']);
-    Route::get('/invoices/{id}', [MyInvoiceController::class, 'show']);
+    Route::get('/invoices', [MyInvoiceController::class, 'index'])->name('my.invoices.index');
+    Route::get('/invoices/{id}', [MyInvoiceController::class, 'show'])->name('my.invoices.show');
 });
