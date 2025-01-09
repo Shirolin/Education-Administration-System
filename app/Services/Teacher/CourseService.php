@@ -32,7 +32,7 @@ class CourseService extends BaseService
      * @return array
      * @throws Throwable
      */
-    public function show(int $id)
+    public function show(int $id): array
     {
         $course = $this->findCourseOrFail($id);
 
@@ -50,7 +50,7 @@ class CourseService extends BaseService
      * @return bool
      * @throws Throwable
      */
-    public function createCourse(array $courseData, array $subCoursesData)
+    public function createCourse(array $courseData, array $subCoursesData): bool
     {
         try {
             DB::transaction(function () use ($courseData, $subCoursesData) {
@@ -77,7 +77,7 @@ class CourseService extends BaseService
      * @param int $id 课程ID
      * @return bool
      */
-    public function deleteCourse(int $id)
+    public function deleteCourse(int $id): bool
     {
         $course = $this->findCourseOrFail($id);
 
@@ -103,7 +103,7 @@ class CourseService extends BaseService
      * @return bool
      * @throws Throwable
      */
-    public function updateCourse(int $id, array $courseData, array $subCoursesData)
+    public function updateCourse(int $id, array $courseData, array $subCoursesData): bool
     {
         $course = $this->findCourseOrFail($id);
 
