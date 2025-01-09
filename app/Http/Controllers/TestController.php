@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Traits\ApiResponseTrait;
 
-class TestController extends Controller
+class TestController extends ApiController
 {
     use ApiResponseTrait;
 
