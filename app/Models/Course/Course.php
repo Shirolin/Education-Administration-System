@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereTeacherNickname($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereUnitFee($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Course\SubCourse> $subCourses
+ * @property-read Teacher|null $teacher
  * @mixin \Eloquent
  */
 class Course extends Model

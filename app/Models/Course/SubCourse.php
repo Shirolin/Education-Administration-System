@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|SubCourse whereMonth($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SubCourse whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SubCourse whereYear($value)
+ * @property-read \App\Models\Course\Course|null $course
  * @mixin \Eloquent
  */
 class SubCourse extends Model

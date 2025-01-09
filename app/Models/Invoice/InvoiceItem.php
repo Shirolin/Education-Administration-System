@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|InvoiceItem whereInvoiceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|InvoiceItem whereSubCourseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|InvoiceItem whereUpdatedAt($value)
+ * @property-read \App\Models\Invoice\Invoice|null $invoice
+ * @property-read SubCourse|null $subCourse
  * @mixin \Eloquent
  */
 class InvoiceItem extends Model

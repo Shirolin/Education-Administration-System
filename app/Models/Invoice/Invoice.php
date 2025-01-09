@@ -27,6 +27,12 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereStudentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereUpdatedAt($value)
+ * @property string $invoice_no
+ * @property-read Course|null $course
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Invoice\InvoiceItem> $items
+ * @property-read int|null $items_count
+ * @property-read Student|null $student
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereInvoiceNo($value)
  * @mixin \Eloquent
  */
 class Invoice extends Model

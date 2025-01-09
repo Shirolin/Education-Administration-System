@@ -29,6 +29,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|StudentCoursePayment whereStudentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StudentCoursePayment whereSubCourseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|StudentCoursePayment whereUpdatedAt($value)
+ * @property-read \App\Models\Invoice\InvoiceItem|null $invoiceItem
+ * @property-read Student|null $student
+ * @property-read SubCourse|null $subCourse
  * @mixin \Eloquent
  */
 class StudentCoursePayment extends Model
