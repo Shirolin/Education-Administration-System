@@ -163,4 +163,26 @@ class Course extends Model
 
         return $this->students()->count();
     }
+
+    /**
+     * 检查传入的用户ID是否是该课程的老师
+     *
+     * @param int $teacherId
+     * @return bool
+     */
+    public function isTeacher(int $teacherId): bool
+    {
+        return $this->teacher_id === $teacherId;
+    }
+
+    /**
+     * 检查传入的用户ID是否是该课程的学生
+     *
+     * @param int $studentId
+     * @return bool
+     */
+    public function isStudent(int $studentId): bool
+    {
+        return $this->students()->where('student_id', $studentId)->exists();
+    }
 }
