@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Teacher\Invoice;
 
 use App\Http\Controllers\ApiController;
 use App\Services\Teacher\InvoiceService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class InvoiceController extends ApiController
@@ -18,10 +19,8 @@ class InvoiceController extends ApiController
 
     /**
      * 获取账单列表
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page');
         $filters = $request->only(['invoice_no', 'status']);
@@ -33,10 +32,8 @@ class InvoiceController extends ApiController
 
     /**
      * 获取单个账单信息
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id): JsonResponse
     {
         $data = $this->InvoiceService->show($id);
         if (!$data) {

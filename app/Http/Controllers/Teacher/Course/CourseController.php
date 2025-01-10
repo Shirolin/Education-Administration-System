@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiController;
 use App\Http\Requests\Teacher\Course\CreateCourseRequest;
 use App\Http\Requests\Teacher\Course\UpdateCourseRequest;
 use App\Services\Teacher\CourseService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CourseController extends ApiController
@@ -20,10 +21,8 @@ class CourseController extends ApiController
 
     /**
      * 获取课程列表
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page');
         $filters = $request->only(['name']);
@@ -35,10 +34,8 @@ class CourseController extends ApiController
 
     /**
      * 获取单个课程信息
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id): JsonResponse
     {
         $data = $this->courseService->show($id);
 
@@ -47,10 +44,8 @@ class CourseController extends ApiController
 
     /**
      * 创建课程
-     * @param CreateCourseRequest $request
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(CreateCourseRequest $request)
+    public function store(CreateCourseRequest $request): JsonResponse
     {
         $course = $request->input('course');
         $subCourses = $request->input('sub_courses');
@@ -65,11 +60,8 @@ class CourseController extends ApiController
 
     /**
      * 更新课程信息
-     * @param UpdateCourseRequest $request
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateCourseRequest $request, $id)
+    public function update(UpdateCourseRequest $request, int $id): JsonResponse
     {
         $course = $request->input('course');
         $subCourses = $request->input('sub_courses');
@@ -84,10 +76,8 @@ class CourseController extends ApiController
 
     /**
      * 删除课程
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
         $data = $this->courseService->deleteCourse($id);
         if (!$data) {
