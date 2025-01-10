@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Invoice\Invoice;
 use App\Models\Role\User;
 use Illuminate\Auth\Access\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class InvoicePolicy
 {
@@ -30,7 +31,7 @@ class InvoicePolicy
     public function create(User $user): Response
     {
         return $user->isTeacher() ? Response::allow()
-            : Response::denyWithStatus(403, '你没有权限创建账单');
+            : Response::denyWithStatus(SymfonyResponse::HTTP_FORBIDDEN, '你没有权限创建账单');
     }
 
     /**
@@ -40,7 +41,7 @@ class InvoicePolicy
     {
         // 创建者或者对应学生可以更新
         return ($invoice->isCreator($user->id) || $invoice->isStudent($user->id)) ? Response::allow()
-            : Response::denyWithStatus(403, '你没有权限修改该账单');
+            : Response::denyWithStatus(SymfonyResponse::HTTP_FORBIDDEN, '你没有权限修改该账单');
     }
 
     /**
@@ -49,7 +50,7 @@ class InvoicePolicy
     public function delete(User $user, Invoice $invoice): Response
     {
         return $invoice->isCreator($user->id) ? Response::allow()
-            : Response::denyWithStatus(403, '你没有权限删除该账单');
+            : Response::denyWithStatus(SymfonyResponse::HTTP_FORBIDDEN, '你没有权限删除该账单');
     }
 
     /**
@@ -58,7 +59,7 @@ class InvoicePolicy
     public function restore(User $user, Invoice $invoice): Response
     {
         return $invoice->isCreator($user->id) ? Response::allow()
-            : Response::denyWithStatus(403, '你没有权限恢复该账单');
+            : Response::denyWithStatus(SymfonyResponse::HTTP_FORBIDDEN, '你没有权限恢复该账单');
     }
 
     /**
@@ -67,6 +68,6 @@ class InvoicePolicy
     public function forceDelete(User $user, Invoice $invoice): Response
     {
         return $invoice->isCreator($user->id) ? Response::allow()
-            : Response::denyWithStatus(403, '你没有权限永久删除该账单');
+            : Response::denyWithStatus(SymfonyResponse::HTTP_FORBIDDEN, '你没有权限永久删除该账单');
     }
 }

@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Passport\Exceptions\OAuthServerException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -46,19 +48,19 @@ class Handler extends ExceptionHandler
     {
         if ($request->expectsJson()) {
             if ($exception instanceof ValidationException) {
-                return $this->error($exception->validator->errors(), null, 422);
+                return $this->error($exception->validator->errors(), null, SymfonyResponse::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($exception instanceof NotFoundHttpException || $exception instanceof ModelNotFoundException) {
-                return $this->error('资源未找到！', null, 404);
+                return $this->error('资源未找到！', null, SymfonyResponse::HTTP_NOT_FOUND);
             }
             if ($exception instanceof MethodNotAllowedHttpException) {
-                return $this->error('请求方法不允许！', null, 405);
+                return $this->error('请求方法不允许！', null, SymfonyResponse::HTTP_METHOD_NOT_ALLOWED);
             }
             if ($exception instanceof AuthenticationException || $exception instanceof OAuthServerException) {
-                return $this->error('认证失败！', null, 401);
+                return $this->error('认证失败！', null, SymfonyResponse::HTTP_UNAUTHORIZED);
             }
 
-            return $this->error('服务器错误', null, 500);
+            return $this->error('服务器错误', null, SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return parent::render($request, $exception);

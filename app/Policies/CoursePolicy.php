@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Course\Course;
 use App\Models\Role\User;
 use Illuminate\Auth\Access\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class CoursePolicy
 {
@@ -31,7 +32,7 @@ class CoursePolicy
     public function create(User $user): Response
     {
         return $user->isTeacher() ? Response::allow()
-            : Response::denyWithStatus(403, '你没有权限创建课程');
+            : Response::denyWithStatus(SymfonyResponse::HTTP_FORBIDDEN, '你没有权限创建课程');
     }
 
     /**
@@ -40,7 +41,7 @@ class CoursePolicy
     public function update(User $user, Course $course): Response
     {
         return $course->isTeacher($user->id) ? Response::allow()
-            : Response::denyWithStatus(403, '你没有权限修改该课程');
+            : Response::denyWithStatus(SymfonyResponse::HTTP_FORBIDDEN, '你没有权限修改该课程');
     }
 
     /**
@@ -49,7 +50,7 @@ class CoursePolicy
     public function delete(User $user, Course $course): Response
     {
         return $course->isTeacher($user->id) ? Response::allow()
-            : Response::denyWithStatus(403, '你没有权限删除该课程');
+            : Response::denyWithStatus(SymfonyResponse::HTTP_FORBIDDEN, '你没有权限删除该课程');
     }
 
     /**
@@ -58,7 +59,7 @@ class CoursePolicy
     public function restore(User $user, Course $course): Response
     {
         return $course->isTeacher($user->id) ? Response::allow()
-            : Response::denyWithStatus(403, '你没有权限恢复该课程');
+            : Response::denyWithStatus(SymfonyResponse::HTTP_FORBIDDEN, '你没有权限恢复该课程');
     }
 
     /**
@@ -67,6 +68,6 @@ class CoursePolicy
     public function forceDelete(User $user, Course $course): Response
     {
         return $course->isTeacher($user->id) ? Response::allow()
-            : Response::denyWithStatus(403, '你没有权限永久删除该课程');
+            : Response::denyWithStatus(SymfonyResponse::HTTP_FORBIDDEN, '你没有权限永久删除该课程');
     }
 }
