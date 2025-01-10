@@ -99,10 +99,8 @@ class User extends Authenticatable
 
     /**
      * 获取角色映射
-     *
-     * @return array
      */
-    public static function getRoleMap()
+    public static function getRoleMap(): array
     {
         return [
             self::ROLE_NONE => '无',
@@ -113,30 +111,24 @@ class User extends Authenticatable
 
     /**
      * 获取角色名
-     *
-     * @return string
      */
-    public function getRoleNameAttribute()
+    public function getRoleNameAttribute(): string
     {
         return self::getRoleMap()[$this->role] ?? '';
     }
 
     /**
      * 是否为教师
-     *
-     * @return bool
      */
-    public function isTeacher()
+    public function isTeacher(): bool
     {
         return $this->role === self::ROLE_TEACHER;
     }
 
     /**
      * 是否为学生
-     *
-     * @return bool
      */
-    public function isStudent()
+    public function isStudent(): bool
     {
         return $this->role === self::ROLE_STUDENT;
     }
