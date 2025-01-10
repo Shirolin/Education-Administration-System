@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $items_count
  * @property-read Student|null $student
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereInvoiceNo($value)
+ * @property int $creator_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereCreatorId($value)
  * @mixin \Eloquent
  */
 class Invoice extends Model
