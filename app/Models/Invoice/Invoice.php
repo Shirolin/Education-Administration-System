@@ -38,6 +38,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereInvoiceNo($value)
  * @property int $creator_id
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereCreatorId($value)
+ * @property string $currency 货币
+ * @property-read Teacher|null $creator
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereCurrency($value)
  * @mixin \Eloquent
  */
 class Invoice extends Model
