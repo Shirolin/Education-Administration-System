@@ -5,6 +5,7 @@ namespace App\Models\Invoice;
 use App\Models\Course\SubCourse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * 账单明细项
@@ -36,20 +37,16 @@ class InvoiceItem extends Model
 
     /**
      * 关联账单
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function invoice()
+    public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'invoice_id', 'id');
     }
 
     /**
      * 关联子课程
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function subCourse()
+    public function subCourse(): BelongsTo
     {
         return $this->belongsTo(SubCourse::class, 'sub_course_id', 'id');
     }

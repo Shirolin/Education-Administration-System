@@ -56,7 +56,7 @@ class SubCourse extends Model
     }
 
     /**
-     * 获取子课程的年月份
+     * 获取子课程的年月份(格式: 2025-01)
      */
     public function getYearMonthAttribute(): string
     {

@@ -95,10 +95,8 @@ class Course extends Model
 
     /**
      * 获取状态map
-     *
-     * @return array
      */
-    public static function getStatusMap()
+    public static function getStatusMap(): array
     {
         return [
             self::STATUS_ENABLED => '正常',
@@ -108,40 +106,32 @@ class Course extends Model
 
     /**
      * 获取状态名
-     *
-     * @return string
      */
-    public function getStatusNameAttribute()
+    public function getStatusNameAttribute(): string
     {
         return self::getStatusMap()[$this->status] ?? '未知';
     }
 
     /**
      * 是否启用
-     *
-     * @return bool
      */
-    public function isEnable()
+    public function isEnable(): bool
     {
         return $this->status == self::STATUS_ENABLED;
     }
 
     /**
      * 是否禁用
-     *
-     * @return bool
      */
-    public function isDisable()
+    public function isDisable(): bool
     {
         return $this->status == self::STATUS_DISABLED;
     }
 
     /**
      * 获取子课程数量
-     *
-     * @return int
      */
-    public function getSubCoursesCountAttribute()
+    public function getSubCoursesCountAttribute(): int
     {
         if ($this->relationLoaded('subCourses')) {
             return $this->subCourses->count();
@@ -152,10 +142,8 @@ class Course extends Model
 
     /**
      * 获取关联学生数量
-     *
-     * @return int
      */
-    public function getStudentsCountAttribute()
+    public function getStudentsCountAttribute(): int
     {
         if ($this->relationLoaded('students')) {
             return $this->students->count();
@@ -166,9 +154,6 @@ class Course extends Model
 
     /**
      * 检查传入的用户ID是否是该课程的老师
-     *
-     * @param int $teacherId
-     * @return bool
      */
     public function isTeacher(int $teacherId): bool
     {
@@ -177,9 +162,6 @@ class Course extends Model
 
     /**
      * 检查传入的用户ID是否是该课程的学生
-     *
-     * @param int $studentId
-     * @return bool
      */
     public function isStudent(int $studentId): bool
     {

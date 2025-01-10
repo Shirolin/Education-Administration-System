@@ -4,8 +4,11 @@ namespace App\Models\Invoice;
 
 use App\Models\Course\Course;
 use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * 账单
@@ -62,40 +65,40 @@ class Invoice extends Model
 
     /**
      * 关联账单明细项
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function items()
+    public function items(): HasMany
     {
         return $this->hasMany(InvoiceItem::class, 'invoice_id', 'id');
     }
 
     /**
      * 关联学生
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function student()
+    public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class, 'student_id', 'id');
     }
 
     /**
      * 关联课程
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function course()
+    public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class, 'course_id', 'id');
     }
 
     /**
-     * 获取状态map
-     *
-     * @return array
+     * 关联创建者(教师)
      */
-    public static function getStatusMap()
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(Teacher::class, 'creator_id', 'id');
+    }
+
+    /**
+     * 获取状态map
+     */
+    public static function getStatusMap(): array
     {
         return [
             self::STATUS_PENDING_NOTIFY => '待通知',
@@ -107,51 +110,57 @@ class Invoice extends Model
 
     /**
      * 获取状态名
-     *
-     * @return string
      */
-    public function getStatusName()
+    public function getStatusName(): string
     {
         return self::getStatusMap()[$this->status] ?? '未知';
     }
 
     /**
      * 是否待通知
-     *
-     * @return bool
      */
-    public function isPendingNotify()
+    public function isPendingNotify(): bool
     {
         return $this->status == self::STATUS_PENDING_NOTIFY;
     }
 
     /**
      * 是否已通知
-     *
-     * @return bool
      */
-    public function isNotified()
+    public function isNotified(): bool
     {
         return $this->status == self::STATUS_NOTIFIED;
     }
 
     /**
      * 是否已支付
-     *
-     * @return bool
      */
-    public function isPaid()
+    public function isPaid(): bool
     {
         return $this->status == self::STATUS_PAID;
     }
 
     /**
      * 是否已取消
-     *
-     * @return bool
      */
-    public function isCancelled()
+    public function isCancelled(): bool
     {
         return $this->status == self::STATUS_CANCELLED;
+    }
+
+    /**
+     * 检查传入的用户ID是否是账单的创建者
+     */
+    public function isCreator(int $teacherId): bool
+    {
+        return $this->creator_id == $teacherId;
+    }
+
+    /**
+     * 检查传入的用户ID是否是账单的学生
+     */
+    public function isStudent(int $studentId): bool
+    {
+        return $this->student_id == $studentId;
     }
 }
