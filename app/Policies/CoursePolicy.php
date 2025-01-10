@@ -28,40 +28,45 @@ class CoursePolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user): Response
     {
-        return $user->isTeacher();
+        return $user->isTeacher() ? Response::allow()
+            : Response::deny('你没有权限创建课程');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Course $course): bool
+    public function update(User $user, Course $course): Response
     {
-        return $user->id === $course->teacher_id;
+        return $user?->id === $course->teacher_id ? Response::allow()
+            : Response::denyWithStatus(403, '你没有权限修改该课程');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Course $course): bool
+    public function delete(User $user, Course $course): Response
     {
-        return $user->id === $course->teacher_id;
+        return $user->id === $course->teacher_id ? Response::allow()
+            : Response::denyWithStatus(403, '你没有权限删除该课程');
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Course $course): bool
+    public function restore(User $user, Course $course): Response
     {
-        return $user->id === $course->teacher_id;
+        return $user->id === $course->teacher_id ? Response::allow()
+            : Response::denyWithStatus(403, '你没有权限恢复该课程');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Course $course): bool
+    public function forceDelete(User $user, Course $course): Response
     {
-        return $user->id === $course->teacher_id;
+        return $user->id === $course->teacher_id ? Response::allow()
+            : Response::denyWithStatus(403, '你没有权限永久删除该课程');
     }
 }
