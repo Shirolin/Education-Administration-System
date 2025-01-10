@@ -5,7 +5,7 @@ namespace App\Http\Requests\Teacher\Course;
 use App\Models\Course\Course;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Models\Teacher;
+use App\Models\Role\Teacher;
 
 class UpdateCourseRequest extends FormRequest
 {

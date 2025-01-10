@@ -3,7 +3,7 @@
 namespace App\Models\Course;
 
 use App\Models\Role\Student;
-use App\Models\Teacher;
+use App\Models\Role\Teacher;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
