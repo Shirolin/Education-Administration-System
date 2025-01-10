@@ -9,13 +9,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * 子课程(课程的具体年月份)
  *
- * @property int $id
- * @property int $course_id
- * @property int $year
- * @property int $month
- * @property string $fee
+ * @property int $id 子课程ID
+ * @property int $course_id 课程ID
+ * @property int $year 年份
+ * @property int $month 月份
+ * @property string $fee 费用
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Course\Course|null $course
+ * @property-read string $year_month
  * @method static \Illuminate\Database\Eloquent\Builder|SubCourse newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SubCourse newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SubCourse query()
@@ -26,8 +28,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|SubCourse whereMonth($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SubCourse whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SubCourse whereYear($value)
- * @property-read \App\Models\Course\Course|null $course
- * @property-read string $year_month
  * @mixin \Eloquent
  */
 class SubCourse extends Model

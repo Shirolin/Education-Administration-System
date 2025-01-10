@@ -13,14 +13,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * 课程
  *
- * @property int $id
- * @property int $teacher_id
- * @property string $teacher_nickname
- * @property string $name
- * @property string $unit_fee
- * @property int $status
+ * @property int $id 课程ID
+ * @property int $teacher_id 教师ID
+ * @property string $teacher_nickname 教师昵称
+ * @property string $name 课程名称
+ * @property string $unit_fee 单价
+ * @property int $status 状态
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read string $status_name
+ * @property-read int|null $students_count
+ * @property-read int|null $sub_courses_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Student> $students
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Course\SubCourse> $subCourses
+ * @property-read Teacher|null $teacher
  * @method static \Illuminate\Database\Eloquent\Builder|Course newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Course newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Course query()
@@ -32,12 +38,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereTeacherNickname($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereUnitFee($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Course whereUpdatedAt($value)
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Course\SubCourse> $subCourses
- * @property-read Teacher|null $teacher
- * @property-read int|null $students_count
- * @property-read int|null $sub_courses_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Student> $students
- * @property-read string $status_name
  * @mixin \Eloquent
  */
 class Course extends Model

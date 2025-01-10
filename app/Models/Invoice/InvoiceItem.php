@@ -10,12 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * 账单明细项
  *
- * @property int $id
- * @property int $invoice_id
- * @property int $sub_course_id
- * @property string $amount
+ * @property int $id 账单明细ID
+ * @property int $invoice_id 账单ID
+ * @property int $sub_course_id 子课程ID
+ * @property string $amount 金额
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Invoice\Invoice|null $invoice
+ * @property-read SubCourse|null $subCourse
  * @method static \Illuminate\Database\Eloquent\Builder|InvoiceItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|InvoiceItem newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|InvoiceItem query()
@@ -25,8 +27,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|InvoiceItem whereInvoiceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|InvoiceItem whereSubCourseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|InvoiceItem whereUpdatedAt($value)
- * @property-read \App\Models\Invoice\Invoice|null $invoice
- * @property-read SubCourse|null $subCourse
  * @mixin \Eloquent
  */
 class InvoiceItem extends Model

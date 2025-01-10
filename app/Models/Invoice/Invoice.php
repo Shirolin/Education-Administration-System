@@ -13,34 +13,34 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * 账单
  *
- * @property int $id
- * @property int $course_id
- * @property int $student_id
- * @property string $total_amount
- * @property int $status
+ * @property int $id 账单ID
+ * @property string $invoice_no 账单编号
+ * @property int $course_id 课程ID
+ * @property int $student_id 学生ID
+ * @property int $creator_id 创建者ID
+ * @property string $total_amount 总金额
+ * @property string $currency 货币
+ * @property int $status 状态
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Course|null $course
+ * @property-read Teacher|null $creator
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Invoice\InvoiceItem> $items
+ * @property-read int|null $items_count
+ * @property-read Student|null $student
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice query()
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereCourseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereCreatorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereInvoiceNo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereStudentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereTotalAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereUpdatedAt($value)
- * @property string $invoice_no
- * @property-read Course|null $course
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Invoice\InvoiceItem> $items
- * @property-read int|null $items_count
- * @property-read Student|null $student
- * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereInvoiceNo($value)
- * @property int $creator_id
- * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereCreatorId($value)
- * @property string $currency 货币
- * @property-read Teacher|null $creator
- * @method static \Illuminate\Database\Eloquent\Builder|Invoice whereCurrency($value)
  * @mixin \Eloquent
  */
 class Invoice extends Model
