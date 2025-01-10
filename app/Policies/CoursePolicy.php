@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Course\Course;
-use App\Models\User;
+use App\Models\Role\User;
 use Illuminate\Auth\Access\Response;
 
 class CoursePolicy
