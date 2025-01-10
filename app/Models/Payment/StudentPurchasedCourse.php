@@ -4,7 +4,7 @@ namespace App\Models\Payment;
 
 use App\Models\Course\SubCourse;
 use App\Models\Invoice\Invoice;
-use App\Models\Student;
+use App\Models\Role\Student;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

@@ -2,7 +2,7 @@
 
 namespace App\Models\Course;
 
-use App\Models\Student;
+use App\Models\Role\Student;
 use App\Models\Teacher;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
