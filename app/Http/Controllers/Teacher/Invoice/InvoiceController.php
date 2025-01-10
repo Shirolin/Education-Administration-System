@@ -45,9 +45,8 @@ class InvoiceController extends ApiController
 
     /**
      * 创建账单
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function store()
+    public function store(): JsonResponse
     {
         $data = $this->InvoiceService->store();
 
@@ -56,10 +55,8 @@ class InvoiceController extends ApiController
 
     /**
      * 更新账单信息
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function update($id)
+    public function update(int $id): JsonResponse
     {
         $data = $this->InvoiceService->update($id);
 
@@ -68,10 +65,8 @@ class InvoiceController extends ApiController
 
     /**
      * 删除账单
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
         $data = $this->InvoiceService->destroy($id);
 
@@ -80,10 +75,8 @@ class InvoiceController extends ApiController
 
     /**
      * 发送账单
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function send($id)
+    public function send(int $id): JsonResponse
     {
         $data = $this->InvoiceService->send($id);
 
