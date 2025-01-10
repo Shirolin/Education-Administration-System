@@ -31,7 +31,7 @@ class CoursePolicy
     public function create(User $user): Response
     {
         return $user->isTeacher() ? Response::allow()
-            : Response::deny('你没有权限创建课程');
+            : Response::denyWithStatus(403, '你没有权限创建课程');
     }
 
     /**
@@ -39,7 +39,7 @@ class CoursePolicy
      */
     public function update(User $user, Course $course): Response
     {
-        return $user?->id === $course->teacher_id ? Response::allow()
+        return $course->isTeacher($user->id) ? Response::allow()
             : Response::denyWithStatus(403, '你没有权限修改该课程');
     }
 
@@ -48,7 +48,7 @@ class CoursePolicy
      */
     public function delete(User $user, Course $course): Response
     {
-        return $user->id === $course->teacher_id ? Response::allow()
+        return $course->isTeacher($user->id) ? Response::allow()
             : Response::denyWithStatus(403, '你没有权限删除该课程');
     }
 
@@ -57,7 +57,7 @@ class CoursePolicy
      */
     public function restore(User $user, Course $course): Response
     {
-        return $user->id === $course->teacher_id ? Response::allow()
+        return $course->isTeacher($user->id) ? Response::allow()
             : Response::denyWithStatus(403, '你没有权限恢复该课程');
     }
 
@@ -66,7 +66,7 @@ class CoursePolicy
      */
     public function forceDelete(User $user, Course $course): Response
     {
-        return $user->id === $course->teacher_id ? Response::allow()
+        return $course->isTeacher($user->id) ? Response::allow()
             : Response::denyWithStatus(403, '你没有权限永久删除该课程');
     }
 }
