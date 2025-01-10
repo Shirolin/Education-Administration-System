@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|SubCourse whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SubCourse whereYear($value)
  * @property-read \App\Models\Course\Course|null $course
+ * @property-read string $year_month
  * @mixin \Eloquent
  */
 class SubCourse extends Model

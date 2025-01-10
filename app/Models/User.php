@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
 /**
- * 
+ * 用户
  *
  * @property int $id
  * @property string $email
@@ -42,11 +42,27 @@ use Laravel\Passport\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUsername($value)
+ * @property-read string $role_name
  * @mixin \Eloquent
  */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    protected $table = 'users';
+
+    /**
+     * @var int 角色-无
+     */
+    const ROLE_NONE = 0;
+    /**
+     * @var int 角色-教师
+     */
+    const ROLE_TEACHER = 1;
+    /**
+     * @var int 角色-学生
+     */
+    const ROLE_STUDENT = 2;
 
     /**
      * The attributes that are mass assignable.
@@ -78,4 +94,50 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    protected $appends = ['role_name'];
+
+    /**
+     * 获取角色映射
+     *
+     * @return array
+     */
+    public static function getRoleMap()
+    {
+        return [
+            self::ROLE_NONE => '无',
+            self::ROLE_TEACHER => '教师',
+            self::ROLE_STUDENT => '学生',
+        ];
+    }
+
+    /**
+     * 获取角色名
+     *
+     * @return string
+     */
+    public function getRoleNameAttribute()
+    {
+        return self::getRoleMap()[$this->role] ?? '';
+    }
+
+    /**
+     * 是否为教师
+     *
+     * @return bool
+     */
+    public function isTeacher()
+    {
+        return $this->role === self::ROLE_TEACHER;
+    }
+
+    /**
+     * 是否为学生
+     *
+     * @return bool
+     */
+    public function isStudent()
+    {
+        return $this->role === self::ROLE_STUDENT;
+    }
 }

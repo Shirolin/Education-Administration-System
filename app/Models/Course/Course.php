@@ -37,6 +37,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read int|null $students_count
  * @property-read int|null $sub_courses_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Student> $students
+ * @property-read string $status_name
  * @mixin \Eloquent
  */
 class Course extends Model
