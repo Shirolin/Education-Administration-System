@@ -64,7 +64,7 @@ class Invoice extends Model
     /**
      * @var int 状态-已取消
      */
-    const STATUS_CANCELLED = 0;
+    const STATUS_CANCELLED = 4;
 
     /**
      * 关联账单明细项
