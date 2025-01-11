@@ -168,6 +168,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\DataBaseQueryServiceProvider::class, // SQL记录日志
     ])->toArray(),
 
     /*
