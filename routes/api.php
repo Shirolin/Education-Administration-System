@@ -67,6 +67,7 @@ Route::group([
     // 账单
     Route::get('/invoices', [MyInvoiceController::class, 'index'])->name('my.invoices.index'); // 获取账单列表
     Route::get('/invoices/{id}', [MyInvoiceController::class, 'show'])->name('my.invoices.show'); // 获取单个账单信息
+    Route::get('/invoices/unpaid/count', [MyInvoiceController::class, 'unpaidCount'])->name('my.invoices.unpaid.count'); // 获取未支付账单数量
 });
 
 /**
