@@ -20,9 +20,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::get('/test', TestController::class . '@test');
 
@@ -44,7 +44,7 @@ Route::group(['prefix' => 'auth'], function () {
 // `DELETE /api/invoices/{id}`：删除账单
 // `POST /api/invoices/{id}/send`：发送账单 (通知学生)
 Route::group([
-    // 'middleware' => 'auth:api',
+    'middleware' => 'auth:api',
 ], function () {
     // 课程
     Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
@@ -69,7 +69,7 @@ Route::group([
 // `GET /api/invoices`：获取账单列表
 // `GET /api/invoices/{id}`：获取单个账单信息
 Route::group([
-    // 'middleware' => 'auth:api',
+    'middleware' => 'auth:api',
     'prefix' => 'my',
 ], function () {
     // 课程
