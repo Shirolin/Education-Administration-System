@@ -151,10 +151,11 @@ class ProcessPaymentSuccess implements ShouldQueue
         try {
             DB::transaction(function () {
                 // 创建 payments 记录
-                $payment = Payment::create([
+                $amount = isset($this->chargeData['amount']) ? $this->chargeData['amount'] / 100 : 0;
+                Payment::create([
                     'invoice_id'      => $this->invoiceId,
                     'omise_id'        => $this->omiseToken,
-                    'amount'          => $this->chargeData['amount'],
+                    'amount'          => $amount,
                     'currency'        => $this->chargeData['currency'],
                     'card_id'         => $this->chargeData['card']['id'],
                     'charge_id'       => $this->chargeData['id'],
