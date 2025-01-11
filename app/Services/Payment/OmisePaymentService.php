@@ -74,15 +74,15 @@ class OmisePaymentService
                 'currency'    => $currency,
                 'description' => $description,
                 'card'        => $this->omiseToken,
-                'source'      => $this->source,
-            ]);
+                // 'source'      => $this->source,
+            ], $this->publickey, $this->secretkey);
 
             if ($charge['status'] === 'successful') {
                 // 支付成功
                 Log::info('支付成功', ['charge' => $charge->toArray()]);
 
                 // 创建异步任务
-                ProcessPaymentSuccess::dispatch($this->invoiceId, $this->omiseToken, $this->$charge->toArray());
+                ProcessPaymentSuccess::dispatch($this->invoiceId, $this->omiseToken, $charge->toArray());
 
                 return true;
             }
