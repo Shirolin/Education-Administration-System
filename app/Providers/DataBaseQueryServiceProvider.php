@@ -54,6 +54,8 @@ class DataBaseQueryServiceProvider extends ServiceProvider
                     $binding = "'{$binding->toDateTimeString()}'";
                 } elseif ($binding instanceof DateTime) {
                     $binding = "'{$binding->format('Y-m-d H:i:s')}'";
+                } elseif ($binding instanceof \DateTimeImmutable) {
+                    $binding = "'{$binding->format('Y-m-d H:i:s')}'";
                 }
 
                 $sql = preg_replace('/\\?/', $binding, $sql, 1);

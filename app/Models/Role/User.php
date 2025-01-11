@@ -98,7 +98,7 @@ class User extends Authenticatable
     protected $appends = ['role_name'];
 
     /**
-     * 查找给定用户名的用户实例。
+     * 查找给定用户名的用户实例
      */
     public function findForPassport(string $username): User
     {
