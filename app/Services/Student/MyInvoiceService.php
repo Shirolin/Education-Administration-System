@@ -4,6 +4,7 @@ namespace App\Services\Student;
 
 use App\Models\Invoice\Invoice;
 use App\Services\BaseService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class MyInvoiceService extends BaseService
 {
@@ -11,9 +12,8 @@ class MyInvoiceService extends BaseService
      * 分页获取账单列表
      * @param int $perPage
      * @param array $filters
-     * @return mixed
      */
-    public function getPaginatedInvoices($perPage = self::DEFAULT_PER_PAGE, $filters = [])
+    public function getPaginatedInvoices($perPage = self::DEFAULT_PER_PAGE, $filters = []): LengthAwarePaginator
     {
         $query = Invoice::query();
 
@@ -25,24 +25,31 @@ class MyInvoiceService extends BaseService
             $query->where('status', $filters['status']);
         }
 
-        return $query->paginate($perPage);
+        return $query->withCount(['items'])->paginate($perPage);
     }
 
     /**
      * 获取单个账单信息
-     * @param int $id
-     * @return array|false
+     * @throws Throwable
      */
-    public function show($id)
+    public function show(int $id): array
     {
-        $invoice = Invoice::find($id);
-        if (!$invoice) {
-            return false;
-        }
+        $invoice = $this->findInvoiceOrFail($id);
 
         return [
             'invoice' => $invoice,
             'items' => $invoice->items,
         ];
+    }
+
+    /**
+     * 根据ID查找账单，如果找不到则抛出异常
+     *
+     * @return Invoice
+     * @throws ModelNotFoundException
+     */
+    public function findInvoiceOrFail(int $id): Invoice
+    {
+        return Invoice::withCount(['items'])->findOrFail($id);
     }
 }
