@@ -152,6 +152,14 @@ class Invoice extends Model
     }
 
     /**
+     * 是否可以发送账单
+     */
+    public function canSend(): bool
+    {
+        return $this->isPendingNotify();
+    }
+
+    /**
      * 检查传入的用户ID是否是账单的创建者
      */
     public function isCreator(int $teacherId): bool

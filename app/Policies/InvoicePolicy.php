@@ -78,6 +78,10 @@ class InvoicePolicy
      */
     public function send(User $user, Invoice $invoice): Response
     {
+        if (!$invoice->canSend()) {
+            return Response::deny('该账单不可发送');
+        }
+
         return $invoice->isCreator($user->id) ? Response::allow()
             : Response::deny('你没有权限发送该账单');
     }
