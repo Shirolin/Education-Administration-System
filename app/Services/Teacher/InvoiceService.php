@@ -4,6 +4,9 @@ namespace App\Services\Teacher;
 
 use App\Models\Invoice\Invoice;
 use App\Services\BaseService;
+use DB;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 
 class InvoiceService extends BaseService
 {
@@ -11,11 +14,11 @@ class InvoiceService extends BaseService
      * 分页获取账单列表
      * @param int $perPage
      * @param array $filters
-     * @return mixed
      */
-    public function getPaginatedInvoices($perPage = self::DEFAULT_PER_PAGE, $filters = [])
+    public function getPaginatedInvoices($perPage = self::DEFAULT_PER_PAGE, $filters = []): LengthAwarePaginator
     {
         $query = Invoice::query();
+        $query->with(['items', 'student', 'course']);
 
         if (isset($filters['invoice_no'])) {
             $query->where('invoice_no', 'LIKE', "{$filters['invoice_no']}%");
@@ -25,20 +28,16 @@ class InvoiceService extends BaseService
             $query->where('status', $filters['status']);
         }
 
-        return $query->paginate($perPage);
+        return $query->withCount(['items'])->paginate($perPage);
     }
 
     /**
      * 获取单个账单信息
-     * @param int $id
-     * @return array
+     * @throws Throwable
      */
-    public function show($id)
+    public function show(int $id): array
     {
-        $invoice = Invoice::find($id);
-        if (!$invoice) {
-            return false;
-        }
+        $invoice = $this->findInvoiceOrFail($id);
 
         return [
             'invoice' => $invoice,
@@ -47,53 +46,123 @@ class InvoiceService extends BaseService
     }
 
     /**
-     * 创建账单
-     * @return array
+     * 创建账单及账单项
+     *
+     * @param array $invoiceData 账单数据
+     * @param array $itemsData 账单项数据数组
+     * @throws Throwable
      */
-    public function store()
+    public function store(array $invoiceData, array $itemsData): bool
     {
-        return [
-            'id' => 3,
-            'name' => '账单3',
-        ];
+        try {
+            DB::transaction(function () use ($invoiceData, $itemsData) {
+                $invoice = Invoice::create($invoiceData);
+                foreach ($itemsData as $itemData) {
+                    $invoice->items()->create($itemData);
+                }
+            });
+        } catch (\Exception $e) {
+            Log::error('创建账单失败', [
+                'invoice_data' => $invoiceData,
+                'items_data' => $itemsData,
+                'message' => $e->getMessage(),
+            ]);
+            return false;
+        }
+
+        return true;
     }
 
     /**
-     * 更新账单信息
-     * @param $id
-     * @return array
+     * 更新账单及账单项
+     *
+     * @param int $id 账单ID
+     * @param array $invoiceData 账单数据
+     * @param array $itemsData 账单项数据数组(全量)
+     * @throws Throwable
      */
-    public function update($id)
+    public function update(int $id, array $invoiceData, array $itemsData): bool
     {
-        return [
-            'id' => $id,
-            'name' => '账单' . $id,
-        ];
+        $invoice = Invoice::findOrFail($id);
+
+        try {
+            DB::transaction(function () use ($invoice, $invoiceData, $itemsData) {
+                $invoice->update($invoiceData);
+
+                // 更新账单项(新增、更新、删除)
+                $itemIds = array_column($itemsData, 'id');
+                $invoice->items()->whereNotIn('id', $itemIds)->delete();
+
+                foreach ($itemsData as $itemData) {
+                    if (isset($itemData['id'])) {
+                        $invoice->items()->where('id', $itemData['id'])->update($itemData);
+                    } else {
+                        $invoice->items()->create($itemData);
+                    }
+                }
+            });
+        } catch (\Exception $e) {
+            Log::error('更新账单失败', [
+                'id' => $id,
+                'invoice_data' => $invoiceData,
+                'items_data' => $itemsData,
+                'message' => $e->getMessage(),
+            ]);
+            return false;
+        }
+
+        return true;
     }
 
     /**
-     * 删除账单
-     * @param $id
-     * @return array
+     * 删除账单及所有账单项
+     * @throws Throwable
      */
-    public function destroy($id)
+    public function deleteInvoice(int $id): bool
     {
-        return [
-            'id' => $id,
-            'name' => '账单' . $id,
-        ];
+        $invoice = $this->findInvoiceOrFail($id);
+
+        try {
+            DB::transaction(function () use ($invoice) {
+                $invoice->items()->delete(); // 先删除账单明细项
+                $invoice->delete(); // 再删除账单
+            });
+        } catch (\Exception $e) {
+            Log::error('删除账单失败', ['id' => $id, 'message' => $e->getMessage()]);
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * 发送账单
-     * @param $id
-     * @return array
+     * @throws Throwable
      */
-    public function send($id)
+    public function send(int $id): bool
     {
-        return [
-            'id' => $id,
-            'name' => '账单' . $id,
-        ];
+        $invoice = $this->findInvoiceOrFail($id);
+
+        try {
+            DB::transaction(function () use ($invoice) {
+                $invoice->update(['status' => Invoice::STATUS_NOTIFIED]);
+            });
+        } catch (\Exception $e) {
+            Log::error('发送账单失败', ['id' => $id, 'message' => $e->getMessage()]);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 根据ID查找账单，如果找不到则抛出异常
+     *
+     * @return Invoice
+     * @throws ModelNotFoundException
+     */
+    public function findInvoiceOrFail(int $id): Invoice
+    {
+        return Invoice::withCount(['items'])->findOrFail($id);
     }
 }

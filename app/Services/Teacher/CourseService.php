@@ -5,6 +5,7 @@ namespace App\Services\Teacher;
 use App\Models\Course\Course;
 use App\Services\BaseService;
 use DB;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 
 class CourseService extends BaseService
@@ -13,9 +14,8 @@ class CourseService extends BaseService
      * 分页获取课程列表
      * @param int $perPage
      * @param array $filters
-     * @return mixed
      */
-    public function getPaginatedCourses($perPage = self::DEFAULT_PER_PAGE, $filters = [])
+    public function getPaginatedCourses($perPage = self::DEFAULT_PER_PAGE, $filters = []): LengthAwarePaginator
     {
         $query = Course::query();
         $query->with('subCourses');
@@ -29,8 +29,6 @@ class CourseService extends BaseService
 
     /**
      * 获取单个课程信息
-     * @param int $id
-     * @return array
      * @throws Throwable
      */
     public function show(int $id): array
@@ -48,7 +46,6 @@ class CourseService extends BaseService
      *
      * @param array $courseData 课程数据
      * @param array $subCoursesData 子课程数据数组
-     * @return bool
      * @throws Throwable
      */
     public function createCourse(array $courseData, array $subCoursesData): bool
@@ -73,35 +70,11 @@ class CourseService extends BaseService
     }
 
     /**
-     * 删除课程及所有子课程
-     *
-     * @param int $id 课程ID
-     * @return bool
-     */
-    public function deleteCourse(int $id): bool
-    {
-        $course = $this->findCourseOrFail($id);
-
-        try {
-            DB::transaction(function () use ($course) {
-                $course->subCourses()->delete(); // 先删除子课程
-                $course->delete(); // 再删除课程
-            });
-        } catch (\Exception $e) {
-            Log::error('删除课程失败', ['id' => $id, 'message' => $e->getMessage()]);
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * 更新课程及子课程
      *
      * @param int $id 课程ID
      * @param array $courseData 课程数据
      * @param array $subCoursesData 子课程数据数组(全量)
-     * @return bool
      * @throws Throwable
      */
     public function updateCourse(int $id, array $courseData, array $subCoursesData): bool
@@ -141,9 +114,29 @@ class CourseService extends BaseService
     }
 
     /**
+     * 删除课程及所有子课程
+     * @throws Throwable
+     */
+    public function deleteCourse(int $id): bool
+    {
+        $course = $this->findCourseOrFail($id);
+
+        try {
+            DB::transaction(function () use ($course) {
+                $course->subCourses()->delete(); // 先删除子课程
+                $course->delete(); // 再删除课程
+            });
+        } catch (\Exception $e) {
+            Log::error('删除课程失败', ['id' => $id, 'message' => $e->getMessage()]);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * 根据ID查找课程，如果找不到则抛出异常
      *
-     * @param int $id 课程ID
      * @return Course
      * @throws ModelNotFoundException
      */
