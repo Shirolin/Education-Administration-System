@@ -14,7 +14,6 @@ class InvoiceController extends ApiController
     public function __construct(InvoiceService $InvoiceService)
     {
         $this->InvoiceService = $InvoiceService;
-        // $this->middleware('auth:api');
     }
 
     /**
@@ -36,9 +35,6 @@ class InvoiceController extends ApiController
     public function show(int $id): JsonResponse
     {
         $data = $this->InvoiceService->show($id);
-        if (!$data) {
-            return $this->error('账单不存在', $data);
-        }
 
         return $this->success($data);
     }
@@ -48,7 +44,10 @@ class InvoiceController extends ApiController
      */
     public function store(): JsonResponse
     {
-        $data = $this->InvoiceService->store();
+        $invoice = $request->input('invoice');
+        $invoiceItems = $request->input('invoice_items');
+
+        $data = $this->InvoiceService->createInvoice($invoice, $invoiceItems);
 
         return $this->success($data, '创建成功');
     }
@@ -58,7 +57,10 @@ class InvoiceController extends ApiController
      */
     public function update(int $id): JsonResponse
     {
-        $data = $this->InvoiceService->update($id);
+        $invoice = $request->input('invoice');
+        $invoiceItems = $request->input('invoice_items');
+
+        $data = $this->InvoiceService->update($id, $invoice, $invoiceItems);
 
         return $this->success($data, '更新成功');
     }
@@ -68,7 +70,7 @@ class InvoiceController extends ApiController
      */
     public function destroy(int $id): JsonResponse
     {
-        $data = $this->InvoiceService->destroy($id);
+        $data = $this->InvoiceService->deleteInvoice($id);
 
         return $this->success($data, '删除成功');
     }

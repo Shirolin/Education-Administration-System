@@ -52,7 +52,7 @@ class InvoiceService extends BaseService
      * @param array $itemsData 账单项数据数组
      * @throws Throwable
      */
-    public function store(array $invoiceData, array $itemsData): bool
+    public function createInvoice(array $invoiceData, array $itemsData): bool
     {
         try {
             DB::transaction(function () use ($invoiceData, $itemsData) {
