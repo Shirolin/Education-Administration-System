@@ -72,4 +72,13 @@ class InvoicePolicy
         return $invoice->isCreator($user->id) ? Response::allow()
             : Response::deny('你没有权限永久删除该账单');
     }
+
+    /**
+     * Determine whether the user can send the model.
+     */
+    public function send(User $user, Invoice $invoice): Response
+    {
+        return $invoice->isCreator($user->id) ? Response::allow()
+            : Response::deny('你没有权限发送该账单');
+    }
 }
