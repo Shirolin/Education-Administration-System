@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Student\Invoice;
 
 use App\Http\Controllers\ApiController;
 use App\Services\Student\MyInvoiceService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class MyInvoiceController extends ApiController
@@ -17,10 +18,8 @@ class MyInvoiceController extends ApiController
 
     /**
      * 获取账单列表
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $perPage = $request->input('per_page');
         $filters = $request->only(['invoice_no', 'status']);
@@ -32,15 +31,20 @@ class MyInvoiceController extends ApiController
 
     /**
      * 获取单个账单信息
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id): JsonResponse
     {
         $data = $this->InvoiceService->show($id);
-        if (!$data) {
-            return $this->error('账单不存在', $data);
-        }
+
+        return $this->success($data);
+    }
+
+    /**
+     * 获取待支付账单数量
+     */
+    public function unpaidCount(): JsonResponse
+    {
+        $data = $this->InvoiceService->unpaidCount();
 
         return $this->success($data);
     }
