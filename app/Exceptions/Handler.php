@@ -48,7 +48,8 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        Log::error($exception->getMessage());
+        $errMsg = $exception->getMessage();
+        Log::error($errMsg);
 
         if ($request->expectsJson()) {
             if ($exception instanceof ValidationException) {
@@ -64,10 +65,10 @@ class Handler extends ExceptionHandler
                 return $this->error('认证失败！', null, SymfonyResponse::HTTP_UNAUTHORIZED);
             }
             if ($exception instanceof AuthorizationException) {
-                return $this->error($exception->getMessage(), null, SymfonyResponse::HTTP_FORBIDDEN);
+                return $this->error($errMsg, null, SymfonyResponse::HTTP_FORBIDDEN);
             }
 
-            return $this->error('服务器错误', null, SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->error('服务器错误', $errMsg, SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return parent::render($request, $exception);
