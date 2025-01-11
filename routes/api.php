@@ -6,7 +6,6 @@ use App\Http\Controllers\Student\Invoice\MyInvoiceController;
 use App\Http\Controllers\Teacher\Course\CourseController;
 use App\Http\Controllers\Teacher\Invoice\InvoiceController;
 use App\Http\Controllers\TestController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,12 +18,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-Route::get('/test', TestController::class . '@test');
 
 /**
  * 认证
@@ -72,3 +65,10 @@ Route::group([
     Route::get('/invoices', [MyInvoiceController::class, 'index'])->name('my.invoices.index'); // 获取账单列表
     Route::get('/invoices/{id}', [MyInvoiceController::class, 'show'])->name('my.invoices.show'); // 获取单个账单信息
 });
+
+/**
+ * 测试
+ */
+if (env('APP_ENV') === 'local') {
+    Route::get('/test', TestController::class . '@test');
+}
