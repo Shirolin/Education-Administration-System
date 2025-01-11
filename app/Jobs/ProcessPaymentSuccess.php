@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Invoice\Invoice;
 use App\Models\Payment\Payment;
 use App\Models\Payment\StudentPurchasedCourse;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -181,7 +182,7 @@ class ProcessPaymentSuccess implements ShouldQueue
                         'invoice_id'    => $this->invoiceId,
                         'student_id'    => $studentId,
                         'sub_course_id' => $subCourse->id,
-                        'purchase_date' => now(),
+                        'purchase_date' => Carbon::now(),
                     ]);
                 }
             });
