@@ -5,6 +5,7 @@ namespace App\Services\Student;
 use App\Models\Invoice\Invoice;
 use App\Services\BaseService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Gate;
 
 class MyInvoiceService extends BaseService
 {
@@ -15,6 +16,8 @@ class MyInvoiceService extends BaseService
      */
     public function getPaginatedInvoices($perPage = self::DEFAULT_PER_PAGE, $filters = []): LengthAwarePaginator
     {
+        Gate::authorize('viewAny', Invoice::class); // 检查用户是否有权限查看账单列表
+
         $query = Invoice::query();
         $query->with(['items']);
 
@@ -70,6 +73,10 @@ class MyInvoiceService extends BaseService
      */
     public function findInvoiceOrFail(int $id): Invoice
     {
-        return Invoice::withCount(['items'])->findOrFail($id);
+        $invoice = Invoice::withCount(['items'])->findOrFail($id);
+
+        Gate::authorize('view', $invoice); // 检查用户是否有权限查看账单
+
+        return $invoice;
     }
 }

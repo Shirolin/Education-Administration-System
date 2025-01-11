@@ -6,6 +6,7 @@ use App\Models\Invoice\Invoice;
 use App\Services\BaseService;
 use DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class InvoiceService extends BaseService
@@ -17,6 +18,8 @@ class InvoiceService extends BaseService
      */
     public function getPaginatedInvoices($perPage = self::DEFAULT_PER_PAGE, $filters = []): LengthAwarePaginator
     {
+        Gate::authorize('viewAny', Invoice::class); // 检查用户是否有权限查看账单列表
+
         $query = Invoice::query();
         $query->with(['items', 'student', 'course']);
 
@@ -35,14 +38,12 @@ class InvoiceService extends BaseService
      * 获取单个账单信息
      * @throws Throwable
      */
-    public function show(int $id): array
+    public function show(int $id): Invoice
     {
         $invoice = $this->findInvoiceOrFail($id);
+        $invoice->load('items');
 
-        return [
-            'invoice' => $invoice,
-            'items' => $invoice->items,
-        ];
+        return $invoice;
     }
 
     /**
@@ -54,6 +55,8 @@ class InvoiceService extends BaseService
      */
     public function createInvoice(array $invoiceData, array $itemsData): bool
     {
+        Gate::authorize('create', Invoice::class); // 检查用户是否有权限创建账单
+
         try {
             DB::transaction(function () use ($invoiceData, $itemsData) {
                 $invoice = Invoice::create($invoiceData);
@@ -84,6 +87,8 @@ class InvoiceService extends BaseService
     public function update(int $id, array $invoiceData, array $itemsData): bool
     {
         $invoice = Invoice::findOrFail($id);
+
+        Gate::authorize('update', $invoice); // 检查用户是否有权限更新账单
 
         try {
             DB::transaction(function () use ($invoice, $invoiceData, $itemsData) {
@@ -122,6 +127,8 @@ class InvoiceService extends BaseService
     {
         $invoice = $this->findInvoiceOrFail($id);
 
+        Gate::authorize('delete', $invoice); // 检查用户是否有权限删除账单
+
         try {
             DB::transaction(function () use ($invoice) {
                 $invoice->items()->delete(); // 先删除账单明细项
@@ -143,6 +150,8 @@ class InvoiceService extends BaseService
     {
         $invoice = $this->findInvoiceOrFail($id);
 
+        Gate::authorize('send', $invoice); // 检查用户是否有权限发送账单
+
         try {
             DB::transaction(function () use ($invoice) {
                 $invoice->update(['status' => Invoice::STATUS_NOTIFIED]);
@@ -163,6 +172,10 @@ class InvoiceService extends BaseService
      */
     public function findInvoiceOrFail(int $id): Invoice
     {
-        return Invoice::withCount(['items'])->findOrFail($id);
+        $invoice = Invoice::withCount(['items'])->findOrFail($id);
+
+        Gate::authorize('view', $invoice); // 检查用户是否有权限查看账单
+
+        return $invoice;
     }
 }

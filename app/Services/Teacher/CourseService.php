@@ -6,6 +6,7 @@ use App\Models\Course\Course;
 use App\Services\BaseService;
 use DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class CourseService extends BaseService
@@ -17,6 +18,8 @@ class CourseService extends BaseService
      */
     public function getPaginatedCourses($perPage = self::DEFAULT_PER_PAGE, $filters = []): LengthAwarePaginator
     {
+        Gate::authorize('viewAny', Course::class); // 检查用户是否有权限查看课程列表
+
         $query = Course::query();
         $query->with('subCourses');
 
@@ -31,14 +34,12 @@ class CourseService extends BaseService
      * 获取单个课程信息
      * @throws Throwable
      */
-    public function show(int $id): array
+    public function show(int $id): Course
     {
         $course = $this->findCourseOrFail($id);
+        $course->load('subCourses');
 
-        return [
-            'course' => $course,
-            'sub_courses' => $course->subCourses,
-        ];
+        return $course;
     }
 
     /**
@@ -50,6 +51,8 @@ class CourseService extends BaseService
      */
     public function createCourse(array $courseData, array $subCoursesData): bool
     {
+        Gate::authorize('create', Course::class); // 检查用户是否有权限创建课程
+
         try {
             DB::transaction(function () use ($courseData, $subCoursesData) {
                 $course = Course::create($courseData);
@@ -80,6 +83,8 @@ class CourseService extends BaseService
     public function updateCourse(int $id, array $courseData, array $subCoursesData): bool
     {
         $course = $this->findCourseOrFail($id);
+
+        Gate::authorize('update', $course); // 检查用户是否有权限更新课程
 
         // 子课程数据处理：
         // 传入的是全量，需要判断是更新已存在的子课程还是创建新的子课程还是删除已存在的子课程
@@ -121,6 +126,8 @@ class CourseService extends BaseService
     {
         $course = $this->findCourseOrFail($id);
 
+        Gate::authorize('delete', $course); // 检查用户是否有权限删除课程
+
         try {
             DB::transaction(function () use ($course) {
                 $course->subCourses()->delete(); // 先删除子课程
@@ -142,6 +149,10 @@ class CourseService extends BaseService
      */
     public function findCourseOrFail(int $id): Course
     {
-        return Course::withCount(['subCourses', 'students'])->findOrFail($id);
+        $course = Course::withCount(['subCourses', 'students'])->findOrFail($id);
+
+        Gate::authorize('view', $course); // 检查用户是否有权限查看课程
+
+        return $course;
     }
 }
