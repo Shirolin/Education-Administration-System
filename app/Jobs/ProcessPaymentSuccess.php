@@ -66,14 +66,13 @@ class ProcessPaymentSuccess implements ShouldQueue
                 $invoice->save();
 
                 // 如果支付成功，更新学生已购买子课程
-                // 查出账单对应的课程的子课程
-                $subCourses = $invoice->course->subCourses;
-                $studentId = $invoice->student_id;
-                foreach ($subCourses as $subCourse) {
+                // 查出账单明细对应的子课程，然后创建学生已购买子课程记录
+                $invoiceItems = $invoice->items;
+                foreach ($invoiceItems as $invoiceItem) {
                     StudentPurchasedCourse::create([
                         'invoice_id'    => $this->invoiceId,
-                        'student_id'    => $studentId,
-                        'sub_course_id' => $subCourse->id,
+                        'student_id'    => $invoice->student_id,
+                        'sub_course_id' => $invoiceItem->sub_course_id,
                         'purchase_date' => Carbon::now(),
                     ]);
                 }
