@@ -6,6 +6,7 @@ use App\Models\Invoice\Invoice;
 use App\Models\Role\User;
 use Illuminate\Support\Facades\Log;
 use OmiseCharge;
+use App\Jobs\ProcessPaymentSuccess;
 
 class OmisePaymentService
 {
@@ -14,6 +15,7 @@ class OmisePaymentService
     protected $omiseToken; // 用于存储 Omise 的 token，由前端生成
     protected $source;     // 来源
     protected $customer;   // 消费者
+    protected $invoiceId;  // 账单 ID
 
     /**
      * @var string 默认货币
@@ -49,6 +51,7 @@ class OmisePaymentService
         $this->omiseToken = $omiseToken;
         $this->source = self::SOURCE_COURSE;
         $this->customer = $user->id;
+        $this->invoiceId = $invoice->id;
         $description = 'Invoice Payment: ' . $invoice->invoice_no;
 
         return $this->createCharge($invoice->total_amount, $invoice->currency ?? self::DEFAULT_CURRENCY, $description);
@@ -75,6 +78,12 @@ class OmisePaymentService
             ]);
 
             if ($charge['status'] === 'successful') {
+                // 支付成功
+                Log::info('支付成功', ['charge' => $charge->toArray()]);
+
+                // 创建异步任务
+                ProcessPaymentSuccess::dispatch($this->invoiceId, $this->omiseToken, $this->$charge->toArray());
+
                 return true;
             }
         } catch (\Exception $e) {

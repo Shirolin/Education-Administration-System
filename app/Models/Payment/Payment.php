@@ -64,6 +64,10 @@ class Payment extends Model
      */
     const STATUS_PAID = 2;
     /**
+     * @var int 状态-失败
+     */
+    const STATUS_FAILED = 3;
+    /**
      * @var int 状态-已取消
      */
     const STATUS_CANCELLED = 0;
@@ -124,6 +128,14 @@ class Payment extends Model
     }
 
     /**
+     * 是否支付失败
+     */
+    public function isFailed(): bool
+    {
+        return $this->status === self::STATUS_FAILED;
+    }
+
+    /**
      * 获取状态map
      */
     public static function getStatusMap(): array
@@ -132,6 +144,7 @@ class Payment extends Model
             self::STATUS_PENDING => '待支付',
             self::STATUS_PAID => '已支付',
             self::STATUS_CANCELLED => '已取消',
+            self::STATUS_FAILED => '失败',
         ];
     }
 
