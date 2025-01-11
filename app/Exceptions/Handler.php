@@ -3,11 +3,13 @@
 namespace App\Exceptions;
 
 use App\Traits\ApiResponseTrait;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Passport\Exceptions\OAuthServerException;
+use Log;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -46,6 +48,8 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        Log::error($exception->getMessage());
+
         if ($request->expectsJson()) {
             if ($exception instanceof ValidationException) {
                 return $this->error($exception->validator->errors(), null, SymfonyResponse::HTTP_UNPROCESSABLE_ENTITY);
@@ -58,6 +62,9 @@ class Handler extends ExceptionHandler
             }
             if ($exception instanceof AuthenticationException || $exception instanceof OAuthServerException) {
                 return $this->error('认证失败！', null, SymfonyResponse::HTTP_UNAUTHORIZED);
+            }
+            if ($exception instanceof AuthorizationException) {
+                return $this->error($exception->getMessage(), null, SymfonyResponse::HTTP_FORBIDDEN);
             }
 
             return $this->error('服务器错误', null, SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR);

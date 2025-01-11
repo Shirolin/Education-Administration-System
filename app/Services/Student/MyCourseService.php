@@ -5,6 +5,7 @@ namespace App\Services\Student;
 use App\Models\Course\Course;
 use App\Services\BaseService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Gate;
 
 class MyCourseService extends BaseService
 {
@@ -15,6 +16,8 @@ class MyCourseService extends BaseService
      */
     public function getPaginatedCourses($perPage = self::DEFAULT_PER_PAGE, $filters = []): LengthAwarePaginator
     {
+        Gate::authorize('viewAny', Course::class); // 检查用户是否有权限查看课程列表
+
         $query = Course::query();
         $query->with(['subCourses', 'students']);
 
@@ -53,6 +56,10 @@ class MyCourseService extends BaseService
      */
     public function findCourseOrFail(int $id): Course
     {
-        return Course::withCount(['subCourses', 'students'])->findOrFail($id);
+        $course = Course::withCount(['subCourses', 'students'])->findOrFail($id);
+
+        Gate::authorize('view', $course); // 检查用户是否有权限查看课程
+
+        return $course;
     }
 }
