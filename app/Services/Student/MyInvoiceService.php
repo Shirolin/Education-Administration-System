@@ -6,9 +6,17 @@ use App\Models\Invoice\Invoice;
 use App\Services\BaseService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Gate;
+use App\Services\Payment\OmisePaymentService;
 
 class MyInvoiceService extends BaseService
 {
+    protected $paymentService;
+
+    public function __construct(OmisePaymentService $paymentService)
+    {
+        $this->paymentService = $paymentService;
+    }
+
     /**
      * 分页获取账单列表
      * @param int $perPage
@@ -67,25 +75,18 @@ class MyInvoiceService extends BaseService
 
     /**
      * 支付账单
-     *  1. 创建支付记录
-     *  2. Omise支付
-     *  3. 更新账单状态
      */
-    public function pay(int $id): bool
+    public function pay(int $id, string $omiseToken = ''): bool
     {
         $invoice = $this->findInvoiceOrFail($id);
-
         Gate::authorize('pay', $invoice); // 检查用户是否有权限支付账单
 
-        if ($invoice->status !== Invoice::STATUS_NOTIFIED) {
-            return false;
+        try {
+            // 调用 Omise 支付服务
+            return $this->paymentService->processPayment($invoice, $this->user(), $omiseToken);
+        } catch (\Exception $e) {
+            throw new \Exception('支付失败: ' . $e->getMessage());
         }
-
-        $invoice->status = Invoice::STATUS_PAID;
-        $invoice->paid_at = now();
-        $invoice->save();
-
-        return true;
     }
 
     /**

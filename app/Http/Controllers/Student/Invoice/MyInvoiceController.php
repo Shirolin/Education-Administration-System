@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Student\Invoice;
 
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\Student\Invoice\PayInvoiceRequest;
 use App\Services\Student\MyInvoiceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -52,9 +53,11 @@ class MyInvoiceController extends ApiController
     /**
      * 支付账单
      */
-    public function pay(int $id): JsonResponse
+    public function pay(PayInvoiceRequest $request, $id): JsonResponse
     {
-        $data = $this->InvoiceService->pay($id);
+        $omiseToken = $request->input('omise_token');
+
+        $data = $this->InvoiceService->pay($id, $omiseToken);
 
         return $this->success($data, '支付成功');
     }
