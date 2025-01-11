@@ -48,4 +48,14 @@ class MyInvoiceController extends ApiController
 
         return $this->success($data);
     }
+
+    /**
+     * 支付账单
+     */
+    public function pay(int $id): JsonResponse
+    {
+        $data = $this->InvoiceService->pay($id);
+
+        return $this->success($data, '支付成功');
+    }
 }

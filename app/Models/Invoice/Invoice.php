@@ -160,6 +160,22 @@ class Invoice extends Model
     }
 
     /**
+     * 是否可以支付账单
+     */
+    public function canPay(): bool
+    {
+        return $this->isNotified();
+    }
+
+    /**
+     * 是否可以取消账单
+     */
+    public function canCancel(): bool
+    {
+        return $this->isPendingNotify() || $this->isNotified();
+    }
+
+    /**
      * 检查传入的用户ID是否是账单的创建者
      */
     public function isCreator(int $teacherId): bool

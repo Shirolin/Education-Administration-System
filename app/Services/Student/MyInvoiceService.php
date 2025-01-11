@@ -66,6 +66,29 @@ class MyInvoiceService extends BaseService
     }
 
     /**
+     * 支付账单
+     *  1. 创建支付记录
+     *  2. Omise支付
+     *  3. 更新账单状态
+     */
+    public function pay(int $id): bool
+    {
+        $invoice = $this->findInvoiceOrFail($id);
+
+        Gate::authorize('pay', $invoice); // 检查用户是否有权限支付账单
+
+        if ($invoice->status !== Invoice::STATUS_NOTIFIED) {
+            return false;
+        }
+
+        $invoice->status = Invoice::STATUS_PAID;
+        $invoice->paid_at = now();
+        $invoice->save();
+
+        return true;
+    }
+
+    /**
      * 根据ID查找账单，如果找不到则抛出异常
      *
      * @return Invoice

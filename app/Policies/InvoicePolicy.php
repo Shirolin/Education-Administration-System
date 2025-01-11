@@ -41,8 +41,8 @@ class InvoicePolicy
      */
     public function update(User $user, Invoice $invoice): Response
     {
-        // 创建者或者对应学生可以更新
-        return ($invoice->isCreator($user->id) || $invoice->isStudent($user->id)) ? Response::allow()
+        // 仅限创建者可以更新
+        return $invoice->isCreator($user->id) ? Response::allow()
             : Response::deny('你没有权限更新该账单');
     }
 
@@ -84,5 +84,31 @@ class InvoicePolicy
 
         return $invoice->isCreator($user->id) ? Response::allow()
             : Response::deny('你没有权限发送该账单');
+    }
+
+    /**
+     * Determine whether the user can pay the model.
+     */
+    public function pay(User $user, Invoice $invoice): Response
+    {
+        if (!$invoice->canPay()) {
+            return Response::deny('该账单不可支付');
+        }
+
+        return $invoice->isStudent($user->id) ? Response::allow()
+            : Response::deny('你没有权限支付该账单');
+    }
+
+    /**
+     * Determine whether the user can cancel the model.
+     */
+    public function cancel(User $user, Invoice $invoice): Response
+    {
+        if (!$invoice->canCancel()) {
+            return Response::deny('该账单不可取消');
+        }
+
+        return $invoice->isCreator($user->id) ? Response::allow()
+            : Response::deny('你没有权限取消该账单');
     }
 }
