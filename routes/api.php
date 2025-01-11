@@ -23,8 +23,11 @@ use Illuminate\Support\Facades\Route;
  * 认证
  */
 Route::group(['prefix' => 'auth'], function () {
-    Route::post('login', [AuthController::class, 'login'])->name('login');
-    Route::middleware('auth:api')->get('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('login', [AuthController::class, 'login'])->name('login'); // 登录
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::get('logout', [AuthController::class, 'logout'])->name('logout'); // 退出登录
+        Route::get('user', [AuthController::class, 'user'])->name('user.show'); // 获取用户信息
+    });
 });
 
 /**

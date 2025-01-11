@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Traits\ApiResponseTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Laravel\Passport\Http\Controllers\AccessTokenController as PassportAccessTokenController;
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,13 +13,9 @@ class AuthController extends PassportAccessTokenController
     use ApiResponseTrait;
 
     /**
-     * 登录
-     * (重写Passport 的 issueToken 方法)
-     *
-     * @param ServerRequestInterface $request
-     * @return \Illuminate\Http\JsonResponse
+     * 登录 (重写Passport 的 issueToken 方法)
      */
-    public function login(ServerRequestInterface $request)
+    public function login(ServerRequestInterface $request): JsonResponse
     {
         $response = parent::issueToken($request); // 调用父类方法获取原始响应
 
@@ -33,14 +30,19 @@ class AuthController extends PassportAccessTokenController
 
     /**
      * 退出登录
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->token()->revoke();
 
         return $this->success(['message' => '登出成功']);
+    }
+
+    /**
+     * 获取用户信息
+     */
+    public function user(Request $request): JsonResponse
+    {
+        return $this->success($request->user());
     }
 }
