@@ -16,6 +16,7 @@ class MyCourseService extends BaseService
     public function getPaginatedCourses($perPage = self::DEFAULT_PER_PAGE, $filters = []): LengthAwarePaginator
     {
         $query = Course::query();
+        $query->with(['subCourses', 'students']);
 
         if (isset($filters['name'])) {
             $query->where('name', 'LIKE', "{$filters['name']}%");
@@ -26,7 +27,6 @@ class MyCourseService extends BaseService
 
         // 只查询当前用户的课程
         $query->whereHas('students', function ($query) {
-            $query->with('students');
             $query->where('student_id', $this->userId());
         });
 

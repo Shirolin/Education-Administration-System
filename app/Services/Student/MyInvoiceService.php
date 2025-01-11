@@ -16,6 +16,7 @@ class MyInvoiceService extends BaseService
     public function getPaginatedInvoices($perPage = self::DEFAULT_PER_PAGE, $filters = []): LengthAwarePaginator
     {
         $query = Invoice::query();
+        $query->with(['items']);
 
         if (isset($filters['invoice_no'])) {
             $query->where('invoice_no', 'LIKE', "{$filters['invoice_no']}%");
@@ -26,10 +27,7 @@ class MyInvoiceService extends BaseService
         }
 
         // 只查询当前用户的账单
-        $query->whereHas('students', function ($query) {
-            $query->with('students');
-            $query->where('student_id', $this->userId());
-        });
+        $query->where('student_id', $this->userId());
 
         // 只显示已通知、已支付、已取消的账单
         $query->whereIn('status', [
