@@ -98,6 +98,14 @@ class User extends Authenticatable
     protected $appends = ['role_name'];
 
     /**
+     * 查找给定用户名的用户实例。
+     */
+    public function findForPassport(string $username): User
+    {
+        return $this->where('username', $username)->first();
+    }
+
+    /**
      * 获取角色映射
      */
     public static function getRoleMap(): array
