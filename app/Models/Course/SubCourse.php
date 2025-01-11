@@ -56,10 +56,10 @@ class SubCourse extends Model
     }
 
     /**
-     * 获取子课程的年月份(格式: 2025-01)
+     * 获取子课程的年月份(格式: 202501)
      */
     public function getYearMonthAttribute(): string
     {
-        return $this->year . '-' . str_pad($this->month, 2, '0', STR_PAD_LEFT);
+        return $this->year . str_pad($this->month, 2, '0', STR_PAD_LEFT);
     }
 }
