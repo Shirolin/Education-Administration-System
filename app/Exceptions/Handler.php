@@ -49,11 +49,10 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         $errMsg = $exception->getMessage();
-        Log::error($errMsg);
 
         if ($request->expectsJson()) {
             if ($exception instanceof ValidationException) {
-                return $this->error($exception->validator->errors(), null, SymfonyResponse::HTTP_UNPROCESSABLE_ENTITY);
+                return $this->error($exception->validator->errors(), $errMsg, SymfonyResponse::HTTP_UNPROCESSABLE_ENTITY);
             }
             if ($exception instanceof NotFoundHttpException || $exception instanceof ModelNotFoundException) {
                 return $this->error('资源未找到！', null, SymfonyResponse::HTTP_NOT_FOUND);
