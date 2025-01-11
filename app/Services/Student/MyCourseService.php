@@ -21,6 +21,15 @@ class MyCourseService extends BaseService
             $query->where('name', 'LIKE', "{$filters['name']}%");
         }
 
+        // 只查询当状态正常的课程
+        $query->where('status', Course::STATUS_ENABLED);
+
+        // 只查询当前用户的课程
+        $query->whereHas('students', function ($query) {
+            $query->with('students');
+            $query->where('student_id', $this->userId());
+        });
+
         return $query->withCount(['subCourses', 'students'])->paginate($perPage);
     }
 
@@ -28,14 +37,12 @@ class MyCourseService extends BaseService
      * 获取单个课程信息
      * @throws Throwable
      */
-    public function show(int $id): array
+    public function show(int $id): Course
     {
         $course = $this->findCourseOrFail($id);
+        $course->load('subCourses');
 
-        return [
-            'course' => $course,
-            'sub_courses' => $course->subCourses,
-        ];
+        return $course;
     }
 
     /**
