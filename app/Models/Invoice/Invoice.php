@@ -66,6 +66,22 @@ class Invoice extends Model
      */
     const STATUS_CANCELLED = 4;
 
+    protected $attributes = [
+        'status' => self::STATUS_PENDING_NOTIFY,
+    ];
+
+    protected $fillable = [
+        'invoice_no',
+        'course_id',
+        'student_id',
+        'creator_id',
+        'total_amount',
+        'currency',
+        'status',
+    ];
+
+    protected $appends = ['status_name'];
+
     /**
      * 关联账单明细项
      */
@@ -114,7 +130,7 @@ class Invoice extends Model
     /**
      * 获取状态名
      */
-    public function getStatusName(): string
+    public function getStatusNameAttribute(): string
     {
         return self::getStatusMap()[$this->status] ?? '未知';
     }
