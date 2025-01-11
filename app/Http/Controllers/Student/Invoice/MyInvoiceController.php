@@ -13,7 +13,6 @@ class MyInvoiceController extends ApiController
     public function __construct(MyInvoiceService $InvoiceService)
     {
         $this->InvoiceService = $InvoiceService;
-        // $this->middleware('auth:api');
     }
 
     /**

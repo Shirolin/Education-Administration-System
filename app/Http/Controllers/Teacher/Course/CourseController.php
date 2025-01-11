@@ -16,7 +16,6 @@ class CourseController extends ApiController
     public function __construct(CourseService $courseService)
     {
         $this->courseService = $courseService;
-        // $this->middleware('auth:api');
     }
 
     /**
