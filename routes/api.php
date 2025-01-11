@@ -26,57 +26,49 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/test', TestController::class . '@test');
 
+/**
+ * 认证
+ */
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login'])->name('login');
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::middleware('auth:api')->get('logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-// 教师端接口
-// `GET /api/courses`：获取课程列表
-// `POST /api/courses`：创建课程
-// `GET /api/courses/{id}`：获取单个课程信息
-// `PUT /api/courses/{id}`：更新课程信息
-// `DELETE /api/courses/{id}`：删除课程
-// `GET /api/invoices`：获取账单列表
-// `POST /api/invoices`：创建账单
-// `GET /api/invoices/{id}`：获取单个账单信息
-// `PUT /api/invoices/{id}`：更新账单信息
-// `DELETE /api/invoices/{id}`：删除账单
-// `POST /api/invoices/{id}/send`：发送账单 (通知学生)
+/**
+ * 教师端
+ */
 Route::group([
     'middleware' => 'auth:api',
 ], function () {
     // 课程
-    Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
-    Route::post('/courses', [CourseController::class, 'store'])->name('courses.store');
-    Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show');
-    Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update');
-    Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy');
+    Route::get('/courses', [CourseController::class, 'index'])->name('courses.index'); // 获取课程列表
+    Route::post('/courses', [CourseController::class, 'store'])->name('courses.store'); // 创建课程
+    Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show'); // 获取单个课程信息
+    Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update'); // 更新课程信息
+    Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy'); // 删除课程
 
     // 账单
-    Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
-    Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoices.store');
-    Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
-    Route::put('/invoices/{id}', [InvoiceController::class, 'update'])->name('invoices.update');
-    Route::delete('/invoices/{id}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
-    Route::post('/invoices/{id}/send', [InvoiceController::class, 'send'])->name('invoices.send');
+    Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index'); // 获取账单列表
+    Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoices.store'); // 创建账单
+    Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show'); // 获取单个账单信息
+    Route::put('/invoices/{id}', [InvoiceController::class, 'update'])->name('invoices.update'); // 更新账单信息
+    Route::delete('/invoices/{id}', [InvoiceController::class, 'destroy'])->name('invoices.destroy'); // 删除账单
+    Route::post('/invoices/{id}/send', [InvoiceController::class, 'send'])->name('invoices.send'); // 发送账单 (通知学生)
 
 });
 
-// 学生端接口
-// `GET /api/courses`：获取课程列表
-// `GET /api/courses/{id}`：获取单个课程信息
-// `GET /api/invoices`：获取账单列表
-// `GET /api/invoices/{id}`：获取单个账单信息
+/**
+ * 学生端
+ */
 Route::group([
     'middleware' => 'auth:api',
     'prefix' => 'my',
 ], function () {
     // 课程
-    Route::get('/courses', [MyCourseController::class, 'index'])->name('my.courses.index');
-    Route::get('/courses/{id}', [MyCourseController::class, 'show'])->name('my.courses.show');
+    Route::get('/courses', [MyCourseController::class, 'index'])->name('my.courses.index'); // 获取课程列表
+    Route::get('/courses/{id}', [MyCourseController::class, 'show'])->name('my.courses.show'); // 获取单个课程信息
 
     // 账单
-    Route::get('/invoices', [MyInvoiceController::class, 'index'])->name('my.invoices.index');
-    Route::get('/invoices/{id}', [MyInvoiceController::class, 'show'])->name('my.invoices.show');
+    Route::get('/invoices', [MyInvoiceController::class, 'index'])->name('my.invoices.index'); // 获取账单列表
+    Route::get('/invoices/{id}', [MyInvoiceController::class, 'show'])->name('my.invoices.show'); // 获取单个账单信息
 });
