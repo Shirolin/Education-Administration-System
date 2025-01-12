@@ -80,7 +80,12 @@ class Invoice extends Model
         'status',
     ];
 
-    protected $appends = ['status_name'];
+    protected $appends = [
+        'status_name',
+        'creator_name',
+        'student_name',
+        'course_name',
+    ];
 
     /**
      * 关联账单明细项
@@ -205,5 +210,29 @@ class Invoice extends Model
     public function isStudent(int $studentId): bool
     {
         return $this->student_id == $studentId;
+    }
+
+    /**
+     * 获取创建者名称
+     */
+    public function getCreatorNameAttribute(): string
+    {
+        return $this->creator->nickname ?? '未知';
+    }
+
+    /**
+     * 获取学生名称
+     */
+    public function getStudentNameAttribute(): string
+    {
+        return $this->student->nickname ?? '未知';
+    }
+
+    /**
+     * 获取课程名称
+     */
+    public function getCourseNameAttribute(): string
+    {
+        return $this->course->name ?? '未知';
     }
 }

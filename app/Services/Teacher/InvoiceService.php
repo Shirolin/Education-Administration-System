@@ -21,7 +21,7 @@ class InvoiceService extends BaseService
         Gate::authorize('viewAny', Invoice::class); // 检查用户是否有权限查看账单列表
 
         $query = Invoice::query();
-        $query->with(['items', 'student', 'course']);
+        $query->with(['items', 'student', 'course', 'creator']);
 
         if (isset($filters['invoice_no'])) {
             $query->where('invoice_no', 'LIKE', "{$filters['invoice_no']}%");
@@ -30,6 +30,8 @@ class InvoiceService extends BaseService
         if (isset($filters['status'])) {
             $query->where('status', $filters['status']);
         }
+
+        $query->orderBy('id', 'DESC');
 
         return $query->withCount(['items'])->paginate($perPage);
     }
