@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Laravel\Passport\Http\Controllers\AccessTokenController as PassportAccessTokenController;
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends PassportAccessTokenController
 {
@@ -20,7 +21,7 @@ class AuthController extends PassportAccessTokenController
         try {
             $response = parent::issueToken($request); // 调用父类方法获取原始响应
         } catch (\Exception $e) {
-            return $this->error('用户名或密码错误', ['error' => $e->getMessage()]);
+            return $this->error('用户名或密码错误', ['isLogin' => true, 'error' => $e->getMessage()], Response::HTTP_UNAUTHORIZED);
         }
 
         $content = json_decode($response->getContent(), true);
