@@ -17,7 +17,11 @@ class AuthController extends PassportAccessTokenController
      */
     public function login(ServerRequestInterface $request): JsonResponse
     {
-        $response = parent::issueToken($request); // 调用父类方法获取原始响应
+        try {
+            $response = parent::issueToken($request); // 调用父类方法获取原始响应
+        } catch (\Exception $e) {
+            return $this->error('用户名或密码错误', ['error' => $e->getMessage()]);
+        }
 
         $content = json_decode($response->getContent(), true);
 
