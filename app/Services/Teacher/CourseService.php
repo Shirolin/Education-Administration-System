@@ -37,7 +37,7 @@ class CourseService extends BaseService
     public function show(int $id): Course
     {
         $course = $this->findCourseOrFail($id);
-        $course->load('subCourses');
+        $course->load(['subCourses', 'students']);
 
         return $course;
     }
