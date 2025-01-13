@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 use App\Models\Role\Teacher;
 use App\Models\Course\SubCourse;
 use App\Models\Invoice\Invoice;
+use App\Models\Invoice\InvoiceItem;
 use App\Models\Payment\StudentPurchasedCourse;
 use Illuminate\Support\Facades\Auth;
 
@@ -88,6 +89,16 @@ class CreateInvoiceRequest extends FormRequest
                     if ($exists) {
                         $fail('学生已购买该子课程');
                     }
+
+                    $invoiceItemExists = InvoiceItem::where('sub_course_id', $value)
+                        ->whereHas('invoice', function ($query) use ($studentId) {
+                            $query->where('student_id', $studentId)
+                                  ->where('status', '!=', Invoice::STATUS_CANCELLED);
+                        })
+                        ->exists();
+                    if ($invoiceItemExists) {
+                        $fail('该子课程已在该学生的其它未取消的账单明细里');
+                    }
                 }
             ],
         ];
@@ -102,7 +113,7 @@ class CreateInvoiceRequest extends FormRequest
             'student_id.exists' => '学生不存在',
             'sub_course_ids.*.integer' => '子课程ID必须是整数',
             'sub_course_ids.*.exists' => '子课程不存在',
-            'sub_course_ids.*.function' => '学生已购买该子课程',
+            'sub_course_ids.*.function' => '学生已购买该子课程或该子课程已在该学生的其它未取消的账单明细里',
         ];
     }
 
