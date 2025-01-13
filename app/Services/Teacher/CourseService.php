@@ -21,7 +21,7 @@ class CourseService extends BaseService
         Gate::authorize('viewAny', Course::class); // 检查用户是否有权限查看课程列表
 
         $query = Course::query();
-        $query->with('subCourses');
+        $query->with(['subCourses', 'students']);
 
         if (isset($filters['name'])) {
             $query->where('name', 'LIKE', "{$filters['name']}%");
