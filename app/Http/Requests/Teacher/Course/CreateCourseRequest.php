@@ -65,6 +65,11 @@ class CreateCourseRequest extends FormRequest
                     }
                 }
             ],
+            'student_ids' => 'nullable|array',
+            'student_ids.*' => [
+                'integer',
+                Rule::exists('students', 'id')
+            ],
         ];
     }
 
@@ -88,6 +93,8 @@ class CreateCourseRequest extends FormRequest
             'sub_courses.*.month.required' => '子课程月份不能为空',
             'sub_courses.*.month.string' => '子课程月份必须是字符串',
             'sub_courses.*.month.unique' => '子课程的年月必须唯一',
+            'student_ids.*.integer' => '学生ID必须是整数',
+            'student_ids.*.exists' => '学生不存在',
         ];
     }
 }
