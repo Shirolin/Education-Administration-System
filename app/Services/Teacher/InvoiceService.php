@@ -145,6 +145,28 @@ class InvoiceService extends BaseService
     }
 
     /**
+     * 取消账单
+     * @throws Throwable
+     */
+    public function cancel(int $id): bool
+    {
+        $invoice = $this->findInvoiceOrFail($id);
+
+        Gate::authorize('cancel', $invoice); // 检查用户是否有权限取消账单
+
+        try {
+            DB::transaction(function () use ($invoice) {
+                $invoice->update(['status' => Invoice::STATUS_CANCELLED]);
+            });
+        } catch (\Exception $e) {
+            Log::error('取消账单失败', ['id' => $id, 'message' => $e->getMessage()]);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * 发送账单
      * @throws Throwable
      */

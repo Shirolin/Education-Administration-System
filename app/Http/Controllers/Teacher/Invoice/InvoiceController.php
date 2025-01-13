@@ -76,6 +76,16 @@ class InvoiceController extends ApiController
     }
 
     /**
+     * 取消账单
+     */
+    public function cancel(int $id): JsonResponse
+    {
+        $data = $this->InvoiceService->cancel($id);
+
+        return $this->success($data, '取消成功');
+    }
+
+    /**
      * 发送账单
      */
     public function send(int $id): JsonResponse

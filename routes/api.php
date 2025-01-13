@@ -50,6 +50,7 @@ Route::group([
     Route::get('/invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show'); // 获取单个账单信息
     Route::put('/invoices/{id}', [InvoiceController::class, 'update'])->name('invoices.update'); // 更新账单信息
     Route::delete('/invoices/{id}', [InvoiceController::class, 'destroy'])->name('invoices.destroy'); // 删除账单
+    Route::post('/invoices/{id}/cancel', [InvoiceController::class, 'cancel'])->name('invoices.cancel'); // 取消账单
     Route::post('/invoices/{id}/send', [InvoiceController::class, 'send'])->name('invoices.send'); // 发送账单 (通知学生)
 
     // 学生
