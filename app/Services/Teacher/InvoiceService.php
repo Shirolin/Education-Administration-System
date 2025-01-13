@@ -43,7 +43,7 @@ class InvoiceService extends BaseService
     public function show(int $id): Invoice
     {
         $invoice = $this->findInvoiceOrFail($id);
-        $invoice->load('items');
+        $invoice->load(['items', 'items.subCourse']);
 
         return $invoice;
     }
