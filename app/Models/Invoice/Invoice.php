@@ -85,6 +85,7 @@ class Invoice extends Model
         'creator_name',
         'student_name',
         'course_name',
+        'operation_status',
     ];
 
     /**
@@ -234,5 +235,17 @@ class Invoice extends Model
     public function getCourseNameAttribute(): string
     {
         return $this->course->name ?? '未知';
+    }
+
+    /**
+     * 获取账单操作状态集合
+     */
+    public function getOperationStatusAttribute(): array
+    {
+        return [
+            'canPay' => $this->canPay(),
+            'canCancel' => $this->canCancel(),
+            'canSend' => $this->canSend(),
+        ];
     }
 }
