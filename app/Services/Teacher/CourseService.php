@@ -27,6 +27,8 @@ class CourseService extends BaseService
             $query->where('name', 'LIKE', "{$filters['name']}%");
         }
 
+        $query->orderBy('id', 'DESC');
+
         return $query->withCount(['subCourses', 'students'])->paginate($perPage);
     }
 
