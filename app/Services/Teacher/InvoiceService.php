@@ -52,7 +52,12 @@ class InvoiceService extends BaseService
      * 创建账单及账单项
      *
      * @param array $invoiceData 账单数据
-     * @param array $itemsData 账单项数据数组
+     * - course_id (int) 课程ID
+     * - student_id (int) 学生ID
+     * - creator_id (int) 创建者ID
+     * @param array $itemsData 账单项数据数组，每个元素包含以下字段：
+     * - sub_course_id (int) 子课程ID
+     * - amount (string) 金额
      * @throws Throwable
      */
     public function createInvoice(array $invoiceData, array $itemsData): bool
@@ -68,49 +73,6 @@ class InvoiceService extends BaseService
             });
         } catch (\Exception $e) {
             Log::error('创建账单失败', [
-                'invoice_data' => $invoiceData,
-                'items_data' => $itemsData,
-                'message' => $e->getMessage(),
-            ]);
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 更新账单及账单项
-     *
-     * @param int $id 账单ID
-     * @param array $invoiceData 账单数据
-     * @param array $itemsData 账单项数据数组(全量)
-     * @throws Throwable
-     */
-    public function update(int $id, array $invoiceData, array $itemsData): bool
-    {
-        $invoice = Invoice::findOrFail($id);
-
-        Gate::authorize('update', $invoice); // 检查用户是否有权限更新账单
-
-        try {
-            DB::transaction(function () use ($invoice, $invoiceData, $itemsData) {
-                $invoice->update($invoiceData);
-
-                // 更新账单项(新增、更新、删除)
-                $itemIds = array_column($itemsData, 'id');
-                $invoice->items()->whereNotIn('id', $itemIds)->delete();
-
-                foreach ($itemsData as $itemData) {
-                    if (isset($itemData['id'])) {
-                        $invoice->items()->where('id', $itemData['id'])->update($itemData);
-                    } else {
-                        $invoice->items()->create($itemData);
-                    }
-                }
-            });
-        } catch (\Exception $e) {
-            Log::error('更新账单失败', [
-                'id' => $id,
                 'invoice_data' => $invoiceData,
                 'items_data' => $itemsData,
                 'message' => $e->getMessage(),
