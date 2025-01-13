@@ -48,7 +48,7 @@ class MyInvoiceService extends BaseService
         ]);
 
         // 把已通知的账单排在前面
-        $query->orderBy('status', 'asc');
+        $query->orderBy('status', 'ASC')->orderBy('id', 'DESC');
 
         return $query->withCount(['items'])->paginate($perPage);
     }
@@ -60,7 +60,7 @@ class MyInvoiceService extends BaseService
     public function show(int $id): Invoice
     {
         $invoice = $this->findInvoiceOrFail($id);
-        $invoice->load('items');
+        $invoice->load(['items', 'items.subCourse']);
 
         return $invoice;
     }
