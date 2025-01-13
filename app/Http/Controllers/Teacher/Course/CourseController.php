@@ -48,8 +48,9 @@ class CourseController extends ApiController
     {
         $course = $request->input('course');
         $subCourses = $request->input('sub_courses');
+        $studentIds = $request->input('student_ids');
 
-        $data = $this->courseService->createCourse($course, $subCourses);
+        $data = $this->courseService->createCourse($course, $subCourses, $studentIds);
         if (!$data) {
             return $this->error('创建失败', $data);
         }
@@ -64,8 +65,9 @@ class CourseController extends ApiController
     {
         $course = $request->input('course');
         $subCourses = $request->input('sub_courses');
+        $studentIds = $request->input('student_ids');
 
-        $data = $this->courseService->updateCourse($id, $course, $subCourses);
+        $data = $this->courseService->updateCourse($id, $course, $subCourses, $studentIds);
         if (!$data) {
             return $this->error('更新失败', $data);
         }
