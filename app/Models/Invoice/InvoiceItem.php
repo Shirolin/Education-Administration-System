@@ -35,6 +35,12 @@ class InvoiceItem extends Model
 
     protected $table = 'invoice_items';
 
+    protected $fillable = [
+        'invoice_id',
+        'sub_course_id',
+        'amount',
+    ];
+
     /**
      * 关联账单
      */

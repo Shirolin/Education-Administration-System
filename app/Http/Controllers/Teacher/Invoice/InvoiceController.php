@@ -49,6 +49,9 @@ class InvoiceController extends ApiController
         $invoiceItems = $request->getInvoiceItemsData();
 
         $data = $this->InvoiceService->createInvoice($invoice, $invoiceItems);
+        if (!$data) {
+            return $this->error('创建失败', $data);
+        }
 
         return $this->success($data, '创建成功');
     }

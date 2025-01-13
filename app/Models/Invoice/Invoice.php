@@ -256,7 +256,7 @@ class Invoice extends Model
     public static function generateInvoiceNo(): string
     {
         do {
-            $invoiceNo = 'INV' . date('YmdHis') . rand(1000, 9999);
+            $invoiceNo = 'INV' . substr(uniqid(), -17);
         } while (self::where('invoice_no', $invoiceNo)->exists());
 
         return $invoiceNo;
