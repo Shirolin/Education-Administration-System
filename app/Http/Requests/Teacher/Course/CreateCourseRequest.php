@@ -26,13 +26,6 @@ class CreateCourseRequest extends FormRequest
                 ]);
             }
         }
-
-        $this->merge([
-            'course' => array_merge($this->input('course', []), [
-                'sub_courses_count' => count($this->input('sub_courses', [])),
-                'status' => Course::STATUS_ENABLED
-            ])
-        ]);
     }
 
     public function rules(): array
@@ -44,7 +37,14 @@ class CreateCourseRequest extends FormRequest
                 Rule::exists('teachers', 'id')
             ],
             'course.teacher_nickname' => 'required|string|max:255',
-            'course.name' => 'required|string|max:255',
+            'course.name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('courses', 'name')->where(function ($query) {
+                    return $query->where('teacher_id', $this->input('course.teacher_id'));
+                })
+            ],
             'course.unit_fee' => 'required|numeric|min:0',
             'sub_courses' => 'nullable|array',
             'sub_courses.*.year' => 'required_with:sub_courses|string',
@@ -84,6 +84,7 @@ class CreateCourseRequest extends FormRequest
             'course.name.required' => '课程名称不能为空',
             'course.name.string' => '课程名称必须是字符串',
             'course.name.max' => '课程名称不能超过255个字符',
+            'course.name.unique' => '该教师下的课程名称已存在',
             'course.unit_fee.required' => '单元费用不能为空',
             'course.unit_fee.numeric' => '单元费用必须是数字',
             'course.unit_fee.min' => '单元费用不能小于0',

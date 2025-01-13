@@ -58,6 +58,7 @@ class CourseService extends BaseService
             DB::transaction(function () use ($courseData, $subCoursesData, $studentIds) {
                 $course = Course::create($courseData);
                 foreach ($subCoursesData as $subCourseData) {
+                    $subCourseData['fee'] = $courseData['unit_fee']; // 设置子课程的费用为主课程的单价
                     $course->subCourses()->create($subCourseData);
                 }
                 // 创建课程后，将学生加入课程
@@ -105,6 +106,7 @@ class CourseService extends BaseService
                 $course->students()->sync($studentIds);
 
                 foreach ($subCoursesData as $subCourseData) {
+                    $subCourseData['fee'] = $courseData['unit_fee']; // 设置子课程的费用为主课程的单价
                     if (isset($subCourseData['id'])) {
                         $course->subCourses()->where('id', $subCourseData['id'])->update($subCourseData);
                     } else {
