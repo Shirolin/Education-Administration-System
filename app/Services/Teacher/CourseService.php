@@ -47,18 +47,21 @@ class CourseService extends BaseService
      *
      * @param array $courseData 课程数据
      * @param array $subCoursesData 子课程数据数组
+     * @param array $studentIds 学生ID数组
      * @throws Throwable
      */
-    public function createCourse(array $courseData, array $subCoursesData): bool
+    public function createCourse(array $courseData, array $subCoursesData = [], array $studentIds = []): bool
     {
         Gate::authorize('create', Course::class); // 检查用户是否有权限创建课程
 
         try {
-            DB::transaction(function () use ($courseData, $subCoursesData) {
+            DB::transaction(function () use ($courseData, $subCoursesData, $studentIds) {
                 $course = Course::create($courseData);
                 foreach ($subCoursesData as $subCourseData) {
                     $course->subCourses()->create($subCourseData);
                 }
+                // 创建课程后，将学生加入课程
+                $course->students()->attach($studentIds);
             });
         } catch (\Exception $e) {
             Log::error('创建课程失败', [
@@ -78,9 +81,10 @@ class CourseService extends BaseService
      * @param int $id 课程ID
      * @param array $courseData 课程数据
      * @param array $subCoursesData 子课程数据数组(全量)
+     * @param array $studentIds 学生ID数组
      * @throws Throwable
      */
-    public function updateCourse(int $id, array $courseData, array $subCoursesData): bool
+    public function updateCourse(int $id, array $courseData, array $subCoursesData = [], array $studentIds = []): bool
     {
         $course = $this->findCourseOrFail($id);
 
@@ -89,13 +93,16 @@ class CourseService extends BaseService
         // 子课程数据处理：
         // 传入的是全量，需要判断是更新已存在的子课程还是创建新的子课程还是删除已存在的子课程
         try {
-            DB::transaction(function () use ($course, $courseData, $subCoursesData) {
+            DB::transaction(function () use ($course, $courseData, $subCoursesData, $studentIds) {
                 $course->update($courseData);
 
                 // 更新子课程(新增、更新、删除)
 
                 $subCourseIds = array_column($subCoursesData, 'id');
                 $course->subCourses()->whereNotIn('id', $subCourseIds)->delete();
+
+                // 更新课程后，将学生加入课程
+                $course->students()->sync($studentIds);
 
                 foreach ($subCoursesData as $subCourseData) {
                     if (isset($subCourseData['id'])) {
