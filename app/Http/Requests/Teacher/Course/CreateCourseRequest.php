@@ -47,10 +47,10 @@ class CreateCourseRequest extends FormRequest
             'course.name' => 'required|string|max:255',
             'course.unit_fee' => 'required|numeric|min:0',
             'sub_courses' => 'nullable|array',
-            'sub_courses.*.year' => 'required_with:sub_courses|integer',
+            'sub_courses.*.year' => 'required_with:sub_courses|string',
             'sub_courses.*.month' => [
                 'required_with:sub_courses',
-                'integer',
+                'string',
                 function ($attribute, $value, $fail) {
                     $subCourses = $this->input('sub_courses', []);
                     $currentSubCourse = $subCourses[explode('.', $attribute)[1]];
@@ -65,7 +65,6 @@ class CreateCourseRequest extends FormRequest
                     }
                 }
             ],
-            'sub_courses.*.fee' => 'required_with:sub_courses|numeric|min:0',
         ];
     }
 
@@ -81,7 +80,6 @@ class CreateCourseRequest extends FormRequest
             'sub_courses.*.year.required' => '子课程年份不能为空',
             'sub_courses.*.month.required' => '子课程月份不能为空',
             'sub_courses.*.month.unique' => '子课程的年月必须唯一',
-            'sub_courses.*.fee.required' => '子课程费用不能为空',
         ];
     }
 }
