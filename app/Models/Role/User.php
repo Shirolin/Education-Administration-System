@@ -100,7 +100,7 @@ class User extends Authenticatable
     /**
      * 查找给定用户名的用户实例
      */
-    public function findForPassport(string $username): User
+    public function findForPassport(string $username): User|null
     {
         return $this->where('username', $username)->first();
     }
