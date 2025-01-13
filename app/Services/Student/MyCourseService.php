@@ -33,6 +33,8 @@ class MyCourseService extends BaseService
             $query->where('student_id', $this->userId());
         });
 
+        $query->orderBy('id', 'DESC');
+
         return $query->withCount(['subCourses', 'students'])->paginate($perPage);
     }
 
@@ -43,7 +45,7 @@ class MyCourseService extends BaseService
     public function show(int $id): Course
     {
         $course = $this->findCourseOrFail($id);
-        $course->load('subCourses');
+        $course->load(['subCourses', 'students']);
 
         return $course;
     }
