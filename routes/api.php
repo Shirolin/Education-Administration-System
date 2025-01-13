@@ -5,6 +5,7 @@ use App\Http\Controllers\Student\Course\MyCourseController;
 use App\Http\Controllers\Student\Invoice\MyInvoiceController;
 use App\Http\Controllers\Teacher\Course\CourseController;
 use App\Http\Controllers\Teacher\Invoice\InvoiceController;
+use App\Http\Controllers\Teacher\Student\StudentController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,8 @@ Route::group([
     Route::delete('/invoices/{id}', [InvoiceController::class, 'destroy'])->name('invoices.destroy'); // 删除账单
     Route::post('/invoices/{id}/send', [InvoiceController::class, 'send'])->name('invoices.send'); // 发送账单 (通知学生)
 
+    // 学生
+    Route::get('/students', [StudentController::class, 'index'])->name('students.index'); // 获取学生列表
 });
 
 /**
