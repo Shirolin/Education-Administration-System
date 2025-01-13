@@ -46,10 +46,10 @@ class CreateCourseRequest extends FormRequest
             'course.teacher_nickname' => 'required|string|max:255',
             'course.name' => 'required|string|max:255',
             'course.unit_fee' => 'required|numeric|min:0',
-            'sub_courses' => 'required|array',
-            'sub_courses.*.year' => 'required|integer',
+            'sub_courses' => 'nullable|array',
+            'sub_courses.*.year' => 'required_with:sub_courses|integer',
             'sub_courses.*.month' => [
-                'required',
+                'required_with:sub_courses',
                 'integer',
                 function ($attribute, $value, $fail) {
                     $subCourses = $this->input('sub_courses', []);
@@ -65,7 +65,7 @@ class CreateCourseRequest extends FormRequest
                     }
                 }
             ],
-            'sub_courses.*.fee' => 'required|numeric|min:0',
+            'sub_courses.*.fee' => 'required_with:sub_courses|numeric|min:0',
         ];
     }
 
