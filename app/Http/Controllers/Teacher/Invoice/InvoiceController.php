@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Teacher\Invoice;
 
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\Teacher\Invoice\CreateInvoiceRequest;
 use App\Services\Teacher\InvoiceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,27 +43,14 @@ class InvoiceController extends ApiController
     /**
      * 创建账单
      */
-    public function store(): JsonResponse
+    public function store(CreateInvoiceRequest $request): JsonResponse
     {
-        $invoice = $request->input('invoice');
-        $invoiceItems = $request->input('invoice_items');
+        $invoice = $request->getInvoiceData();
+        $invoiceItems = $request->getInvoiceItemsData();
 
         $data = $this->InvoiceService->createInvoice($invoice, $invoiceItems);
 
         return $this->success($data, '创建成功');
-    }
-
-    /**
-     * 更新账单信息
-     */
-    public function update(int $id): JsonResponse
-    {
-        $invoice = $request->input('invoice');
-        $invoiceItems = $request->input('invoice_items');
-
-        $data = $this->InvoiceService->update($id, $invoice, $invoiceItems);
-
-        return $this->success($data, '更新成功');
     }
 
     /**

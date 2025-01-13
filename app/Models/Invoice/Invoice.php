@@ -68,6 +68,7 @@ class Invoice extends Model
 
     protected $attributes = [
         'status' => self::STATUS_PENDING_NOTIFY,
+        'currency' => 'JPY',
     ];
 
     protected $fillable = [
@@ -247,5 +248,17 @@ class Invoice extends Model
             'canCancel' => $this->canCancel(),
             'canSend' => $this->canSend(),
         ];
+    }
+
+    /**
+     * 生成唯一的账单编号
+     */
+    public static function generateInvoiceNo(): string
+    {
+        do {
+            $invoiceNo = 'INV' . date('YmdHis') . rand(1000, 9999);
+        } while (self::where('invoice_no', $invoiceNo)->exists());
+
+        return $invoiceNo;
     }
 }
