@@ -70,7 +70,7 @@ class MyInvoiceService extends BaseService
      */
     public function unpaidCount(): int
     {
-        return Invoice::where('status', Invoice::STATUS_NOTIFIED)->count();
+        return Invoice::where('status', Invoice::STATUS_NOTIFIED)->where('student_id', $this->userId())->count();
     }
 
     /**
