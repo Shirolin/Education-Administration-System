@@ -31,6 +31,7 @@ class InvoiceService extends BaseService
             $query->where('status', $filters['status']);
         }
 
+        $query->where('creator_id', $this->userId());
         $query->orderBy('id', 'DESC');
 
         return $query->withCount(['items'])->paginate($perPage);
