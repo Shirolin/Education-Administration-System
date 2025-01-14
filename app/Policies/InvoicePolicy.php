@@ -22,6 +22,7 @@ class InvoicePolicy
      */
     public function view(User $user, Invoice $invoice): Response
     {
+         // 限定学生和老师都只能查看自己的账单
         return ($invoice->isCreator($user->id) || $invoice->isStudent($user->id)) ? Response::allow()
             : Response::deny('你没有权限查看该账单');
     }
