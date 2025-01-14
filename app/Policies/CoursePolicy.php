@@ -22,8 +22,8 @@ class CoursePolicy
      */
     public function view(User $user, Course $course): Response
     {
-        // 限定学生和老师只能查看自己的课程
-        return ($course->isTeacher($user->id) || $course->isStudent($user->id)) ? Response::allow()
+        // 限定学生只能查看自己参加的课程，老师可以查看所有课程
+        return ($user->isTeacher() || $course->isStudent($user->id)) ? Response::allow()
             : Response::deny('你没有权限查看该课程');
     }
 
