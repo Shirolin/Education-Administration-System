@@ -83,7 +83,11 @@ class MyInvoiceService extends BaseService
 
         try {
             // 调用 Omise 支付服务
-            return $this->paymentService->processPayment($invoice, $this->user(), $omiseToken);
+            $res  = $this->paymentService->processPayment($invoice, $this->user(), $omiseToken);
+            if (!$res) {
+                throw new \Exception('支付失败');
+            }
+            return true;
         } catch (\Exception $e) {
             throw new \Exception('支付失败: ' . $e->getMessage());
         }

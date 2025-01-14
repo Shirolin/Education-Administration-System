@@ -54,7 +54,12 @@ class OmisePaymentService
         $this->invoiceId = $invoice->id;
         $description = 'Invoice Payment: ' . $invoice->invoice_no;
 
-        return $this->createCharge($invoice->total_amount, $invoice->currency ?? self::DEFAULT_CURRENCY, $description);
+        try {
+            return $this->createCharge($invoice->total_amount, $invoice->currency ?? self::DEFAULT_CURRENCY, $description);
+        } catch (\Exception $e) {
+            Log::error('支付处理失败', ['code' => $e->getCode(), 'message' => $e->getMessage()]);
+            throw new \Exception('支付处理失败: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -85,6 +90,9 @@ class OmisePaymentService
                 ProcessPaymentSuccess::dispatch($this->invoiceId, $this->omiseToken, $charge->toArray());
 
                 return true;
+            } else {
+                // 支付失败
+                Log::error('支付失败', ['charge' => $charge->toArray()]);
             }
         } catch (\Exception $e) {
             // 处理支付异常
