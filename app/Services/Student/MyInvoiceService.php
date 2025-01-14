@@ -27,7 +27,7 @@ class MyInvoiceService extends BaseService
         Gate::authorize('viewAny', Invoice::class); // 检查用户是否有权限查看账单列表
 
         $query = Invoice::query();
-        $query->with(['items']);
+        $query->with(['items', 'student', 'course', 'creator']);
 
         if (isset($filters['invoice_no'])) {
             $query->where('invoice_no', 'LIKE', "{$filters['invoice_no']}%");
